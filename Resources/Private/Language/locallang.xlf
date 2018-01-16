@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0" xmlns:t3="http://typo3.org/schemas/xliff">
+    <file source-language="en" datatype="plaintext" original="messages" product-name="dagou_extbase">
+        <header/>
+        <body>
+            <trans-unit id="validator.exist">
+                <source>No such %1$s in %2$s.</source>
+            </trans-unit>
+            <trans-unit id="validator.not_exist">
+                <source>%1$s is already existed in %2$s.</source>
+            </trans-unit>
+            <trans-unit id="validator.unique">
+                <source>Duplicated %1$s in %2$s.</source>
+            </trans-unit>
+            <trans-unit id="validator.url">
+                <source>Invalid Url.</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
