@@ -12,8 +12,4 @@ class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
     {
         return FALSE;
     }
-
-    protected function initializeView(ViewInterface $view) {
-        print_r($view->getRenderingContext()->getTemplatePaths());
-    }
 }
