@@ -85,8 +85,9 @@ class EidRequestHandler extends RequestHandler {
             $this->controller->clear_preview();
             $this->controller->determineId();
         }*/
-
-        //$this->controller->makeCacheHash();
+echo $this->controller->no_cache ? 'TRUE' : 'FALSE';
+die();
+        $this->controller->makeCacheHash();
         $this->timeTracker->pull();
 
         // Admin Panel & Frontend editing
