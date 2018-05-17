@@ -2,6 +2,7 @@
 namespace Dagou\DagouExtbase\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Http\RequestHandler;
 
 class EidRequestHandler extends RequestHandler {
