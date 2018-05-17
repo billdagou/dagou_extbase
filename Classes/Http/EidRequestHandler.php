@@ -217,10 +217,8 @@ class EidRequestHandler extends RequestHandler {
                 header('Content-Length: '.strlen($this->controller->content));
             }
             if ($statusCode) {
-print_r(1);
-                $response->withStatus($statusCode, $this->controller->content);
+                return $response->withStatus($statusCode, $this->controller->content);
             } else {
-print_r(2);
                 $response->getBody()->write($this->controller->content);
             }
         }
