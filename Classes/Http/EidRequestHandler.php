@@ -253,8 +253,9 @@ class EidRequestHandler extends RequestHandler {
 
         $bootstrap = GeneralUtility::makeInstance(Bootstrap::class);
 
-        $configuration = ArrayUtility::mergeRecursiveWithOverrule(
-            $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$eID],
+        $configuration = $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$eID];
+        ArrayUtility::mergeRecursiveWithOverrule(
+            $configuration,
             [
                 'features' => [
                     'requireCHashArgumentForActionArguments' => FALSE,
@@ -262,7 +263,6 @@ class EidRequestHandler extends RequestHandler {
             ]
         );
         print_r($configuration);
-        die();
 
         $this->controller->content = $bootstrap->run('', $configuration);
     }
