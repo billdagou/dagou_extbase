@@ -237,8 +237,6 @@ class EidRequestHandler extends RequestHandler {
     }
 
     protected function processOutput() {
-        print_r(get_class($this->controller->cObj));
-
         $eID = isset($this->request->getParsedBody()['eID']) ? $this->request->getParsedBody()['eID'] :
             (isset($this->request->getQueryParams()['eID']) ? $this->request->getQueryParams()['eID'] : '');
 
