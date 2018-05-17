@@ -3,6 +3,7 @@ namespace Dagou\DagouExtbase\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Core\Bootstrap;
 use TYPO3\CMS\Frontend\Http\RequestHandler;
 
 class EidRequestHandler extends RequestHandler {
@@ -161,8 +162,8 @@ class EidRequestHandler extends RequestHandler {
         $sendTSFEContent = FALSE;
         if ($this->controller->isOutputting()) {
             $this->timeTracker->push('Print Content', '');
-            print_r('lala');
             //$this->controller->processOutput();
+            $statusCode = $this->processOutput();
             $sendTSFEContent = TRUE;
             $this->timeTracker->pull();
         }
@@ -215,7 +216,11 @@ class EidRequestHandler extends RequestHandler {
                 && !$this->controller->doWorkspacePreview()) {
                 header('Content-Length: '.strlen($this->controller->content));
             }
-            $response->getBody()->write($this->controller->content);
+            if ($statusCode) {
+                $response->withStatus($statusCode, $this->controller->content);
+            } else {
+                $response->getBody()->write($this->controller->content);
+            }
         }
         // Debugging Output
         /*if (isset($GLOBALS['error']) && is_object($GLOBALS['error'])
@@ -227,6 +232,27 @@ class EidRequestHandler extends RequestHandler {
         GeneralUtility::devLog('END of FRONTEND session', 'cms', 0, ['_FLUSH' => TRUE]);*/
 
         return $response;
+    }
+
+    protected function processOutput() {
+        $eID = isset($this->request->getParsedBody()['eID']) ? $this->request->getParsedBody()['eID'] :
+            (isset($this->request->getQueryParams()['eID']) ? $this->request->getQueryParams()['eID'] : '');
+
+        if (empty($eID) || !isset($GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$eID])) {
+            $this->controller->content = 'eID not registered';
+
+            return 404;
+        }
+
+        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$eID])) {
+            $this->controller->content = 'Invalid eID';
+
+            return 404;
+        }
+
+        $bootstrap = GeneralUtility::makeInstance(Bootstrap::class);
+
+        $this->controller->content = $bootstrap->run('', $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$eID]);
     }
 
     /**
