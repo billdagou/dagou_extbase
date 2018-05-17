@@ -2,6 +2,7 @@
 namespace Dagou\DagouExtbase\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Core\Bootstrap;
 use TYPO3\CMS\Frontend\Http\RequestHandler;
@@ -129,9 +130,9 @@ class EidRequestHandler extends RequestHandler {
         $this->controller->checkPageForMountpointRedirect();*/
 
         // Generate page
-        /*$this->controller->setUrlIdToken();
+        //$this->controller->setUrlIdToken();
         $this->timeTracker->push('Page generation', '');
-        if ($this->controller->isGeneratePage()) {
+        /*if ($this->controller->isGeneratePage()) {
             $this->controller->generatePage_preProcessing();
             $temp_theScript = $this->controller->generatePage_whichScript();
             if ($temp_theScript) {
@@ -147,9 +148,10 @@ class EidRequestHandler extends RequestHandler {
             $this->controller->generatePage_postProcessing();
         } elseif ($this->controller->isINTincScript()) {
             $this->controller->preparePageContentGeneration();
-        }
-        $this->controller->releaseLocks();
-        $this->timeTracker->pull();*/
+        }*/
+        $this->controller->newCObj();
+        //$this->controller->releaseLocks();
+        $this->timeTracker->pull();
 
         // Render non-cached parts
         /*if ($this->controller->isINTincScript()) {
@@ -235,6 +237,8 @@ class EidRequestHandler extends RequestHandler {
     }
 
     protected function processOutput() {
+        print_r(get_class($this->controller->cObj));
+
         $eID = isset($this->request->getParsedBody()['eID']) ? $this->request->getParsedBody()['eID'] :
             (isset($this->request->getQueryParams()['eID']) ? $this->request->getQueryParams()['eID'] : '');
 
@@ -251,7 +255,16 @@ class EidRequestHandler extends RequestHandler {
 
         $bootstrap = GeneralUtility::makeInstance(Bootstrap::class);
 
-        $this->controller->content = $bootstrap->run('', $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$eID]);
+        $configuration = ArrayUtility::mergeRecursiveWithOverrule(
+            $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$eID],
+            [
+                'features' => [
+                    'requireCHashArgumentForActionArguments' => FALSE,
+                ],
+            ]
+        );
+
+        $this->controller->content = $bootstrap->run('', $configuration);
     }
 
     /**
