@@ -1,15 +1,11 @@
 <?php
 namespace Dagou\DagouExtbase\Mvc\Controller;
 
-use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
-
-class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
-{
+class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
     /**
      * @return bool
      */
-    protected function getErrorFlashMessage()
-    {
+    protected function getErrorFlashMessage() {
         return FALSE;
     }
 }
