@@ -263,6 +263,7 @@ class EidRequestHandler extends RequestHandler {
                 ],
             ]
         );
+        print_r($configuration);
 
         $this->controller->content = $bootstrap->run('', $configuration);
     }
