@@ -164,7 +164,6 @@ class EidRequestHandler extends RequestHandler {
             $this->timeTracker->push('Print Content', '');
             //$this->controller->processOutput();
             $statusCode = $this->processOutput();
-            print_r($statusCode);
             $sendTSFEContent = TRUE;
             $this->timeTracker->pull();
         }
@@ -217,11 +216,11 @@ class EidRequestHandler extends RequestHandler {
                 && !$this->controller->doWorkspacePreview()) {
                 header('Content-Length: '.strlen($this->controller->content));
             }
-            print_r($statusCode);
-            die();
             if ($statusCode) {
+print_r(1);
                 $response->withStatus($statusCode, $this->controller->content);
             } else {
+print_r(2);
                 $response->getBody()->write($this->controller->content);
             }
         }
@@ -246,7 +245,6 @@ class EidRequestHandler extends RequestHandler {
 
             return 404;
         }
-
         if (!is_array($GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$eID])) {
             $this->controller->content = 'Invalid eID';
 
