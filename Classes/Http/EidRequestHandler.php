@@ -164,6 +164,7 @@ class EidRequestHandler extends RequestHandler {
             $this->timeTracker->push('Print Content', '');
             //$this->controller->processOutput();
             $statusCode = $this->processOutput();
+            print_r($statusCode);
             $sendTSFEContent = TRUE;
             $this->timeTracker->pull();
         }
@@ -216,6 +217,8 @@ class EidRequestHandler extends RequestHandler {
                 && !$this->controller->doWorkspacePreview()) {
                 header('Content-Length: '.strlen($this->controller->content));
             }
+            print_r($statusCode);
+            die();
             if ($statusCode) {
                 $response->withStatus($statusCode, $this->controller->content);
             } else {
