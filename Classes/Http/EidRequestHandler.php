@@ -2,6 +2,9 @@
 namespace Dagou\DagouExtbase\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Exception;
+use TYPO3\CMS\Core\Http\Dispatcher;
+use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Core\Bootstrap;
@@ -29,7 +32,7 @@ class EidRequestHandler extends RequestHandler {
             unset($hookParameters);
         }
 
-        $this->initializeController();
+        //$this->initializeController();
 
         if ($GLOBALS['TYPO3_CONF_VARS']['FE']['pageUnavailable_force']
             && !GeneralUtility::cmpIP(
@@ -39,11 +42,47 @@ class EidRequestHandler extends RequestHandler {
             $this->controller->pageUnavailableAndExit('This page is temporarily unavailable.');
         }
 
-        $this->controller->connectToDB();
+        //$this->controller->connectToDB();
 
         // Output compression
         // Remove any output produced until now
         $this->bootstrap->endOutputBufferingAndCleanPreviousOutput();
+
+        /** @var \TYPO3\CMS\Core\Http\Response $response */
+        $response = GeneralUtility::makeInstance(Response::class);
+
+        $eID = isset($request->getParsedBody()['eID']) ? $request->getParsedBody()['eID'] :
+            (isset($request->getQueryParams()['eID']) ? $request->getQueryParams()['eID'] : '');
+
+        if (empty($eID) || !isset($GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$eID])) {
+            return $response->withStatus(404, 'eID not registered');
+        }
+
+        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$eID])) {
+            $configuration = $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$eID];
+
+            // Simple check to make sure that it's not an absolute file (to use the fallback)
+            if (strpos($configuration, '::') !== FALSE || is_callable($configuration)) {
+                /** @var \TYPO3\CMS\Core\Http\Dispatcher $dispatcher */
+                $dispatcher = GeneralUtility::makeInstance(Dispatcher::class);
+                $request = $request->withAttribute('target', $configuration);
+
+                return $dispatcher->dispatch($request, $response);
+            }
+
+            $scriptPath = GeneralUtility::getFileAbsFileName($configuration);
+            if ($scriptPath === '') {
+                throw new Exception('Registered eID has invalid script path.', 1416391467);
+            }
+            include $scriptPath;
+
+            return NULL;
+        }
+
+        $this->initializeController();
+
+        $this->controller->connectToDB();
+
         $this->initializeOutputCompression();
 
         $this->bootstrap->loadBaseTca();
@@ -161,14 +200,14 @@ class EidRequestHandler extends RequestHandler {
         }*/
 
         // Output content
-        $sendTSFEContent = FALSE;
-        if ($this->controller->isOutputting()) {
+        //$sendTSFEContent = FALSE;
+        //if ($this->controller->isOutputting()) {
             $this->timeTracker->push('Print Content', '');
             //$this->controller->processOutput();
-            $statusCode = $this->processOutput();
-            $sendTSFEContent = TRUE;
+            $this->processOutput($eID);
+            //$sendTSFEContent = TRUE;
             $this->timeTracker->pull();
-        }
+        //}
         // Store session data for fe_users
         $this->controller->storeSessionData();
         // Statistics
@@ -203,9 +242,9 @@ class EidRequestHandler extends RequestHandler {
             }
         }*/
 
-        if ($sendTSFEContent) {
+        //if ($sendTSFEContent) {
             /** @var \TYPO3\CMS\Core\Http\Response $response */
-            $response = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Http\Response::class);
+            //$response = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Http\Response::class);
             // Send content-length header.
             // Notice that all HTML content outside the length of the content-length header will be cut off!
             // Therefore content of unknown length from included PHP-scripts and if admin users are logged
@@ -218,12 +257,8 @@ class EidRequestHandler extends RequestHandler {
                 && !$this->controller->doWorkspacePreview()) {
                 header('Content-Length: '.strlen($this->controller->content));
             }
-            if ($statusCode) {
-                return $response->withStatus($statusCode, $this->controller->content);
-            } else {
-                $response->getBody()->write($this->controller->content);
-            }
-        }
+            $response->getBody()->write($this->controller->content);
+        //}
         // Debugging Output
         /*if (isset($GLOBALS['error']) && is_object($GLOBALS['error'])
             && @is_callable(
@@ -236,21 +271,7 @@ class EidRequestHandler extends RequestHandler {
         return $response;
     }
 
-    protected function processOutput() {
-        $eID = isset($this->request->getParsedBody()['eID']) ? $this->request->getParsedBody()['eID'] :
-            (isset($this->request->getQueryParams()['eID']) ? $this->request->getQueryParams()['eID'] : '');
-
-        if (empty($eID) || !isset($GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$eID])) {
-            $this->controller->content = 'eID not registered';
-
-            return 404;
-        }
-        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$eID])) {
-            $this->controller->content = 'Invalid eID';
-
-            return 404;
-        }
-
+    protected function processOutput($eID) {
         $bootstrap = GeneralUtility::makeInstance(Bootstrap::class);
 
         $configuration = $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$eID];
