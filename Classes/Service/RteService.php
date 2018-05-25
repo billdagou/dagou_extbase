@@ -2,6 +2,7 @@
 namespace Dagou\DagouExtbase\Service;
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Html\RteHtmlParser;
 
 class RteService implements \TYPO3\CMS\Core\SingletonInterface {
     /**
@@ -40,7 +41,7 @@ class RteService implements \TYPO3\CMS\Core\SingletonInterface {
     /**
      * @param \TYPO3\CMS\Core\Html\RteHtmlParser $rteHtmlParser
      */
-    public function injectRteHtmlParser(\TYPO3\CMS\Core\Html\RteHtmlParser $rteHtmlParser) {
+    public function injectRteHtmlParser(RteHtmlParser $rteHtmlParser) {
         $this->rteHtmlParser = $rteHtmlParser;
     }
 

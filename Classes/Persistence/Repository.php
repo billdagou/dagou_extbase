@@ -32,19 +32,30 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository {
     public function find(ConditionInterface $condition = NULL) {
         $query = $this->createConditionQuery($condition);
 
-        if (($orderings = $condition->getOrderings())) {
+        if (method_exists($condition, 'getOrderings') && ($orderings = $condition->getOrderings())) {
             $query->setOrderings($orderings);
         }
 
-        if (($limit = $condition->getLimit()) && $limit > 0) {
+        if (method_exists($condition, 'getLimit') && ($limit = $condition->getLimit()) && $limit > 0) {
             $query->setLimit($limit);
 
-            if (($page = $condition->getPage()) && $page > 1) {
+            if (method_exists($condition, 'getPage') && ($page = $condition->getPage()) && $page > 1) {
                 $query->setOffset(($page - 1) * $limit);
             }
         }
 
         return $query->execute();
+    }
+
+    /**
+     * @param \Dagou\DagouExtbase\DomainObject\ConditionInterface|NULL $condition
+     *
+     * @return \TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface
+     */
+    public function findOne(ConditionInterface $condition = NULL) {
+        $query = $this->createConditionQuery($condition);
+
+        return $query->setLimit(1)->execute()->getFirst();
     }
 
     public function persistAll() {

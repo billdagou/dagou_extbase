@@ -3,6 +3,7 @@ namespace Dagou\DagouExtbase\Validation\Validator;
 
 use Dagou\DagouExtbase\Traits\Database;
 use Dagou\DagouExtbase\Traits\DataMapper;
+use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
 abstract class AbstractDatabaseValidator extends AbstractValidator {
     use Database, DataMapper;
