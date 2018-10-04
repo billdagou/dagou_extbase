@@ -2,36 +2,32 @@
 namespace Dagou\DagouExtbase\Service;
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Html\RteHtmlParser;
+use TYPO3\CMS\Core\SingletonInterface;
 
-class RteService implements \TYPO3\CMS\Core\SingletonInterface
-{
+class RteService implements SingletonInterface {
+    /**
+     * @var string
+     */
+    protected $field = '';
+    /**
+     * @var int
+     */
+    protected $pid = 0;
+    /**
+     * @var \TYPO3\CMS\Core\Html\RteHtmlParser
+     */
+    protected $rteHtmlParser;
+    /**
+     * @var string
+     */
+    protected $table = '';
     /**
      * @var array
      */
     protected $thisConfig = [];
 
-    /**
-     * @var int
-     */
-    protected $pid = 0;
-
-    /**
-     * @var string
-     */
-    protected $table = '';
-
-    /**
-     * @var string
-     */
-    protected $field = '';
-
-    /**
-     * @var \TYPO3\CMS\Core\Html\RteHtmlParser
-     */
-    protected $rteHtmlParser;
-
-    public function __construct()
-    {
+    public function __construct() {
         if (TYPO3_MODE === 'BE') {
             if (TYPO3_cliMode) {
                 $this->pid = 0;
@@ -46,34 +42,28 @@ class RteService implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * @param \TYPO3\CMS\Core\Html\RteHtmlParser $rteHtmlParser
      */
-    public function injectRteHtmlParser(\TYPO3\CMS\Core\Html\RteHtmlParser $rteHtmlParser)
-    {
+    public function injectRteHtmlParser(RteHtmlParser $rteHtmlParser) {
         $this->rteHtmlParser = $rteHtmlParser;
     }
 
     /**
+     * @param string $value
      * @param string $table
      * @param string $field
-     * @return \Dagou\DagouExtbase\Service\RteService
+     *
+     * @return string
      */
-    protected function initRteHtmlParser($table, $field)
-    {
-        $this->table = $table;
-        $this->field = $field;
-
-        $this->rteHtmlParser->init($table . ':' . $field, $this->pid);
-        $this->rteHtmlParser->setRelPath('');
-
-        return $this;
+    public function transformDbToRte($value, $table, $field) {
+        return $this->initRteHtmlParser($table, $field)->RTE_transform($value, 'rte');
     }
 
     /**
      * @param string $value
      * @param string $direction
+     *
      * @return string
      */
-    protected function RTE_transform($value, $direction)
-    {
+    protected function RTE_transform($value, $direction) {
         if (TYPO3_MODE === 'BE') {
             $RTEsetup = $GLOBALS['BE_USER']->getTSConfig('RTE', BackendUtility::getPagesTSconfig($this->pid));
 
@@ -98,24 +88,29 @@ class RteService implements \TYPO3\CMS\Core\SingletonInterface
     }
 
     /**
-     * @param string $value
      * @param string $table
      * @param string $field
-     * @return string
+     *
+     * @return \Dagou\DagouExtbase\Service\RteService
      */
-    public function transformRteToDb($value, $table, $field)
-    {
-        return $this->initRteHtmlParser($table, $field)->RTE_transform($value, 'db');
+    protected function initRteHtmlParser($table, $field) {
+        $this->table = $table;
+        $this->field = $field;
+
+        $this->rteHtmlParser->init($table.':'.$field, $this->pid);
+        $this->rteHtmlParser->setRelPath('');
+
+        return $this;
     }
 
     /**
      * @param string $value
      * @param string $table
      * @param string $field
+     *
      * @return string
      */
-    public function transformDbToRte($value, $table, $field)
-    {
-        return $this->initRteHtmlParser($table, $field)->RTE_transform($value, 'rte');
+    public function transformRteToDb($value, $table, $field) {
+        return $this->initRteHtmlParser($table, $field)->RTE_transform($value, 'db');
     }
 }

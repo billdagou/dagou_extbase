@@ -1,18 +1,12 @@
 <?php
 namespace Dagou\DagouExtbase\Validation\Validator;
 
-abstract class AbstractDatabaseValidator extends \TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator
-{
-    /**
-     * @var \TYPO3\CMS\Core\Database\ConnectionPool
-     */
-    protected $connectionPool;
+use Dagou\DagouExtbase\Traits\Database;
+use Dagou\DagouExtbase\Traits\DataMapper;
+use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
-    /**
-     * @var \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper
-     */
-    protected $dataMapper;
-
+abstract class AbstractDatabaseValidator extends AbstractValidator {
+    use Database, DataMapper;
     /**
      * @var array
      */
@@ -23,19 +17,29 @@ abstract class AbstractDatabaseValidator extends \TYPO3\CMS\Extbase\Validation\V
         'hidden' => ['', 'Deleted field', 'string'],
     ];
 
-    /**
-     * @param \TYPO3\CMS\Core\Database\ConnectionPool $connectionPool
-     */
-    public function injectConnectionPool(\TYPO3\CMS\Core\Database\ConnectionPool $connectionPool)
-    {
-        $this->connectionPool = $connectionPool;
+    protected function initialize() {
+        $this->tableName = $this->dataMapper->convertClassNameToTableName($this->options['className']);
+        $this->columnName =
+            $this->dataMapper->convertPropertyNameToColumnName($this->options['property'], $this->options['className']);
     }
 
     /**
-     * @param \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper $dataMapper
+     * @param mixed $value
+     *
+     * @return array
      */
-    public function injectDataMapper(\TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper $dataMapper)
-    {
-        $this->dataMapper = $dataMapper;
+    protected function getWhereClause($value) {
+        $where = [
+            $this->columnName => $value,
+        ];
+
+        if ($this->options['deleted']) {
+            $where[$this->options['deleted']] = FALSE;
+        }
+        if ($this->options['hidden']) {
+            $where[$this->options['hidden']] = FALSE;
+        }
+
+        return $where;
     }
 }

@@ -1,34 +1,25 @@
 <?php
 namespace Dagou\DagouExtbase\Validation\Validator;
 
-class UniqueValidator extends AbstractDatabaseValidator
-{
+class UniqueValidator extends AbstractDatabaseValidator {
     /**
      * @param mixed $value
      */
-    protected function isValid($value)
-    {
-        $tableName = $this->dataMapper->convertClassNameToTableName($this->options['className']);
-        $columnName = $this->dataMapper->convertPropertyNameToColumnName($this->options['property'], $this->options['className']);
+    protected function isValid($value) {
+        $this->initialize();
 
-        $where = [
-            $columnName => $value,
-        ];
-        if ($this->options['deleted']) {
-            $where[$this->options['deleted']] = FALSE;
-        }
-        if ($this->options['hidden']) {
-            $where[$this->options['hidden']] = FALSE;
-        }
+        $where = $this->getWhereClause($value);
 
-        $connection = $this->connectionPool->getConnectionForTable($tableName);
-
-        if ($connection->count($columnName, $tableName, $where) > 1) {
+        if ($this->getConnection()->count($this->columnName, $this->tableName, $where) > 1) {
             $this->addError(
-                $this->translateErrorMessage('validator.unique', 'dagou_extbase', [
-                    $columnName,
-                    $tableName,
-                ]),
+                $this->translateErrorMessage(
+                    'validator.unique',
+                    'dagou_extbase',
+                    [
+                        $this->columnName,
+                        $this->tableName,
+                    ]
+                ),
                 1459304412
             );
         }
