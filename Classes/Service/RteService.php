@@ -3,8 +3,9 @@ namespace Dagou\DagouExtbase\Service;
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Html\RteHtmlParser;
+use TYPO3\CMS\Core\SingletonInterface;
 
-class RteService implements \TYPO3\CMS\Core\SingletonInterface {
+class RteService implements SingletonInterface {
     /**
      * @var string
      */
