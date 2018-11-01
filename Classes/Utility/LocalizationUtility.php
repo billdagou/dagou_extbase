@@ -60,9 +60,9 @@ class LocalizationUtility extends \TYPO3\CMS\Extbase\Utility\LocalizationUtility
 
     /**
      * @param string $extensionName
-     * @param string $languageKey
+     * @param string|NULL $languageKey
      */
-    protected static function initializeLocalization($extensionName, $languageKey) {
+    protected static function initializeLocalization($extensionName, $languageKey = NULL) {
         if (isset(self::$LOCAL_LANG[$extensionName])) {
             return;
         }
@@ -92,9 +92,9 @@ class LocalizationUtility extends \TYPO3\CMS\Extbase\Utility\LocalizationUtility
     }
 
     /**
-     * @param string $languageKey
+     * @param string|NULL $languageKey
      */
-    protected static function setLanguageKeys($languageKey) {
+    protected static function setLanguageKeys($languageKey = NULL) {
         self::$languageKey = 'default';
         self::$alternativeLanguageKeys = [];
 
