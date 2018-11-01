@@ -14,9 +14,7 @@ class LocalizationUtility extends \TYPO3\CMS\Extbase\Utility\LocalizationUtility
      *
      * @return null|string
      */
-    public static function translate($key, string $extensionName = NULL, array $arguments = NULL,
-        string $languageKey = NULL
-    ) {
+    public static function translate($key, $extensionName = NULL, $arguments = NULL, $languageKey = NULL) {
         $value = NULL;
 
         if (GeneralUtility::isFirstPartOfStr($key, 'LLL:')) {
@@ -64,7 +62,7 @@ class LocalizationUtility extends \TYPO3\CMS\Extbase\Utility\LocalizationUtility
      * @param string $extensionName
      * @param string $languageKey
      */
-    protected static function initializeLocalization(string $extensionName, string $languageKey) {
+    protected static function initializeLocalization($extensionName, $languageKey) {
         if (isset(self::$LOCAL_LANG[$extensionName])) {
             return;
         }
@@ -96,7 +94,7 @@ class LocalizationUtility extends \TYPO3\CMS\Extbase\Utility\LocalizationUtility
     /**
      * @param string $languageKey
      */
-    protected static function setLanguageKeys(string $languageKey = NULL) {
+    protected static function setLanguageKeys($languageKey) {
         self::$languageKey = 'default';
         self::$alternativeLanguageKeys = [];
 
