@@ -21,6 +21,10 @@ Extend its possibility to retrieve different model objects in one function.
 #### RteService
 Helper service to convert from RTE to DB and backward.
 
+## Utility
+#### LocalizationUtility
+Localization helper which could fetch localized labels via specific language key.
+
 ## Validation
 #### ExistValidator
 Validate if the value is existed in the database.
