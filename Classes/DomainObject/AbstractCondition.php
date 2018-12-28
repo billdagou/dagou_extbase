@@ -1,9 +1,7 @@
 <?php
 namespace Dagou\DagouExtbase\DomainObject;
 
-use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
-
-abstract class AbstractCondition extends AbstractDomainObject implements ConditionInterface {
+abstract class AbstractCondition implements ConditionInterface {
     /**
      * @var int
      */
