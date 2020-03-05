@@ -1,49 +1,21 @@
 <?php
 namespace Dagou\DagouExtbase\Service;
 
-use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Configuration\Richtext;
 use TYPO3\CMS\Core\Html\RteHtmlParser;
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class RteService implements SingletonInterface {
     /**
-     * @var string
+     * @param string $value
+     * @param string $table
+     * @param string $field
+     *
+     * @return string
      */
-    protected $field = '';
-    /**
-     * @var int
-     */
-    protected $pid = 0;
-    /**
-     * @var \TYPO3\CMS\Core\Html\RteHtmlParser
-     */
-    protected $rteHtmlParser;
-    /**
-     * @var string
-     */
-    protected $table = '';
-    /**
-     * @var array
-     */
-    protected $thisConfig = [];
-
-    public function __construct() {
-        if (TYPO3_MODE === 'BE') {
-            if (TYPO3_cliMode) {
-                $this->pid = 0;
-            } else {
-                $this->pid = $GLOBALS['TSFE']->id;
-            }
-        } else {
-            $this->pid = $GLOBALS['TSFE']->id;
-        }
-    }
-
-    /**
-     * @param \TYPO3\CMS\Core\Html\RteHtmlParser $rteHtmlParser
-     */
-    public function injectRteHtmlParser(RteHtmlParser $rteHtmlParser) {
-        $this->rteHtmlParser = $rteHtmlParser;
+    public function transformDbToRte(string $value, string $table, string $field): string {
+        return $this->getRteHtmlParser($table, $field)->RTE_transform($value, NULL, 'rte', $this->getRteConfiguration($table, $field));
     }
 
     /**
@@ -53,64 +25,33 @@ class RteService implements SingletonInterface {
      *
      * @return string
      */
-    public function transformDbToRte($value, $table, $field) {
-        return $this->initRteHtmlParser($table, $field)->RTE_transform($value, 'rte');
-    }
-
-    /**
-     * @param string $value
-     * @param string $direction
-     *
-     * @return string
-     */
-    protected function RTE_transform($value, $direction) {
-        if (TYPO3_MODE === 'BE') {
-            $RTEsetup = $GLOBALS['BE_USER']->getTSConfig('RTE', BackendUtility::getPagesTSconfig($this->pid));
-
-            $thisConfig = BackendUtility::RTEsetup($RTEsetup['properties'], $this->table, $this->field, 'text');
-        } else {
-            $pageTSconfig = $GLOBALS['TSFE']->getPagesTSconfig();
-
-            $thisConfig = $pageTSconfig['RTE.']['default.']['FE.'];
-        }
-
-        return $this->rteHtmlParser->RTE_transform(
-            $value,
-            [
-                'richtext' => 1,
-                'rte_transform' => [
-                    'parameters' => ['mode=ts_css'],
-                ],
-            ],
-            $direction,
-            $thisConfig
-        );
+    public function transformRteToDb(string $value, string $table, string $field): string {
+        return $this->getRteHtmlParser($table, $field)->RTE_transform($value, NULL, 'db', $this->getRteConfiguration($table, $field));
     }
 
     /**
      * @param string $table
      * @param string $field
      *
-     * @return \Dagou\DagouExtbase\Service\RteService
+     * @return \TYPO3\CMS\Core\Html\RteHtmlParser
      */
-    protected function initRteHtmlParser($table, $field) {
-        $this->table = $table;
-        $this->field = $field;
+    protected function getRteHtmlParser(string $table, string $field): RteHtmlParser {
+        $rteHtmlParser = GeneralUtility::makeInstance(RteHtmlParser::class);
+        $rteHtmlParser->init($table.':'.$field, $GLOBALS['TSFE']->id);
 
-        $this->rteHtmlParser->init($table.':'.$field, $this->pid);
-        $this->rteHtmlParser->setRelPath('');
-
-        return $this;
+        return $rteHtmlParser;
     }
 
     /**
-     * @param string $value
      * @param string $table
      * @param string $field
      *
-     * @return string
+     * @return array
      */
-    public function transformRteToDb($value, $table, $field) {
-        return $this->initRteHtmlParser($table, $field)->RTE_transform($value, 'db');
+    protected function getRteConfiguration(string $table, string $field): array {
+        return GeneralUtility::makeInstance(Richtext::class)->getConfiguration($table, $field, $GLOBALS['TSFE']->id, 0, [
+            'type' => 'text',
+            'enableRichtext' => TRUE,
+        ]);
     }
 }

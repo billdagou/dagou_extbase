@@ -1,11 +1,57 @@
 <?php
 namespace Dagou\DagouExtbase\Mvc\Controller;
 
+use Dagou\DagouExtbase\Property\TypeConverter\UploadedFileReferenceConverter;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Annotation\Inject;
+
 class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
+    /**
+     * @var \TYPO3\CMS\Extbase\Service\ExtensionService
+     * @Inject
+     */
+    protected $extensionService;
+
+    /**
+     * @param string $extensionName
+     * @param string $pluginName
+     * @param string $messageBody
+     * @param string $messageTitle
+     * @param int $severity
+     * @param bool $storeInSession
+     * @see \TYPO3\CMS\Extbase\Mvc\Controller\AbstractController::addFlashMessage()
+     */
+    public function addExternalFlashMessage(string $extensionName, string $pluginName, string $messageBody, string $messageTitle = '', $severity = FlashMessage::OK, bool $storeInSession = TRUE) {
+        $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $messageBody, $messageTitle, $severity, $storeInSession);
+
+        $this->controllerContext
+            ->getFlashMessageQueue('extbase.flashmessages.'.$this->extensionService->getPluginNamespace($extensionName, $pluginName))
+                ->enqueue($flashMessage);
+    }
+
     /**
      * @return bool
      */
     protected function getErrorFlashMessage() {
         return FALSE;
+    }
+
+    /**
+     * @param string $argumentName
+     * @param string $propertyName
+     */
+    protected function setTypeConverterConfigurationForFileUpload(string $argumentName, string $propertyName) {
+        $configuration = [
+            UploadedFileReferenceConverter::CONFIGURATION_ALLOWED_FILE_EXTENSIONS => $this->settings[$propertyName]['ext'] ?: $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'],
+            UploadedFileReferenceConverter::CONFIGURATION_MAX_UPLOAD_FILE_SIZE => $this->settings[$propertyName]['size'] ?: NULL,
+            UploadedFileReferenceConverter::CONFIGURATION_UPLOAD_CONFLICT_MODE => $this->settings[$propertyName]['conflict'] ?: NULL,
+            UploadedFileReferenceConverter::CONFIGURATION_UPLOAD_FOLDER => $this->settings[$propertyName]['folder'] ?: NULL,
+        ];
+
+        $this->arguments->getArgument($argumentName)
+            ->getPropertyMappingConfiguration()
+                ->forProperty($propertyName)
+                    ->setTypeConverterOptions(UploadedFileReferenceConverter::class, $configuration);
     }
 }
