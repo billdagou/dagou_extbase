@@ -1,15 +1,15 @@
 <?php
 $EM_CONF[$_EXTKEY] = [
-    'title' => 'Extbase Framework - Dagou Edition',
-    'description' => 'Extbase Framework - Dagou Edition.',
+    'title' => 'Extbase Framework for Extensions - Dagou Edition',
+    'description' => 'Extbase Framework for Extensions - Dagou Edition.',
     'category' => 'misc',
-    'constraints' => [
-        'depends' => [
-            'extbase' => '8.7.0-8.7.99',
-        ],
-    ],
-    'state' => 'stable',
     'author' => 'Bill.Dagou',
     'author_email' => 'billdagou@gmail.com',
-    'version' => '8.7.0',
+    'version' => '9.5.0',
+    'state' => 'stable',
+    'constraints' => [
+        'depends' => [
+            'extbase' => '9.5.0-9.5.99',
+        ],
+    ],
 ];

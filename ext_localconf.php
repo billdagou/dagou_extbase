@@ -1,8 +1,4 @@
 <?php
-if (!defined('TYPO3_MODE')) {
-    die('Access denied.');
-}
+defined('TYPO3_MODE') || die();
 
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Frontend\Http\EidRequestHandler::class] = [
-    'className' => \Dagou\DagouExtbase\Http\EidRequestHandler::class,
-];
+\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerTypeConverter(\Dagou\DagouExtbase\Property\TypeConverter\UploadedFileReferenceConverter::class);

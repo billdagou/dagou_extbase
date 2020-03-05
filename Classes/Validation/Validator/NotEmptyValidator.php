@@ -1,7 +1,7 @@
 <?php
 namespace Dagou\DagouExtbase\Validation\Validator;
 
-class UrlValidator extends \TYPO3\CMS\Extbase\Validation\Validator\UrlValidator {
+class NotEmptyValidator extends \TYPO3\CMS\Extbase\Validation\Validator\NotEmptyValidator {
     /**
      * @param string $translateKey
      * @param string $extensionName
@@ -10,6 +10,6 @@ class UrlValidator extends \TYPO3\CMS\Extbase\Validation\Validator\UrlValidator 
      * @return string
      */
     protected function translateErrorMessage($translateKey, $extensionName, $arguments = []): string {
-        return 'url';
+        return 'notEmpty';
     }
 }
