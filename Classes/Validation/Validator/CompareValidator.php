@@ -14,7 +14,7 @@ class CompareValidator extends AbstractValidator {
 
     public function isValid($value) {
         if (!$this->compare($value, $this->options['value'], $this->options['op'])) {
-            $this->addError('compare.'.$this->options['op']);
+            $this->addError('compare.'.$this->options['op'], 1571841830);
         }
     }
 
