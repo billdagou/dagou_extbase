@@ -3,7 +3,7 @@ namespace Dagou\DagouExtbase\Validation\Validator;
 
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
-class CompareViewHelper extends AbstractValidator {
+class CompareValidator extends AbstractValidator {
     /**
      * @var array
      */
