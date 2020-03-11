@@ -1,6 +1,8 @@
 <?php
 namespace Dagou\DagouExtbase\Validation\Validator;
 
+use TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface;
+use TYPO3\CMS\Extbase\Validation\Exception\InvalidValidationOptionsException;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
 class CompareValidator extends AbstractValidator {
@@ -10,11 +12,24 @@ class CompareValidator extends AbstractValidator {
     protected $supportedOptions = [
         'value' => ['', 'The timestamp to compare', 'mixed', TRUE],
         'op' => ['', 'Greater than or equal', 'string', TRUE],
+        'property' => ['', 'Property path', 'string'],
     ];
 
     public function isValid($value) {
+        if ($this->options['property']) {
+            foreach (explode('.', $this->options['property']) as $property) {
+                if ($value instanceof DomainObjectInterface && $value->_hasProperty($property)) {
+                    $value = $value->_getProperty($property);
+                } elseif (is_array($value) && isset($value[$property])) {
+                    $value = $value[$property];
+                } else {
+                    throw new InvalidValidationOptionsException('No such property('.$property.') in '.(is_object($value) ? get_class($value) : gettype($value)), 1579098734);
+                }
+            }
+        }
+
         if (!$this->compare($value, $this->options['value'], $this->options['op'])) {
-            $this->addError('compare.'.$this->options['op'], 1571841830);
+            $this->addError(($this->options['property'] ? $this->options['property'].'.' : '').'compare.'.$this->options['op'], 1571841830);
         }
     }
 
@@ -27,23 +42,21 @@ class CompareValidator extends AbstractValidator {
      */
     protected function compare($value1, $value2, string $op): bool {
         switch ($op) {
-            case '==':
+            case 'eq':
                 return $value1 == $value2;
-            case '===':
+            case 'seq':
                 return $value1 === $value2;
-            case '>':
+            case 'gt':
                 return $value1 > $value2;
-            case '>=':
+            case 'gte':
                 return $value1 >= $value2;
-            case '<':
+            case 'lt':
                 return $value1 < $value2;
-            case '<=':
+            case 'lte':
                 return $value1 <= $value2;
-            case '<>':
-                return $value1 <> $value2;
-            case '!=':
+            case 'neq':
                 return $value1 != $value2;
-            case '!==':
+            case 'nseq':
                 return $value1 !== $value2;
         }
 
