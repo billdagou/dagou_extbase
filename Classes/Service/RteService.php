@@ -49,7 +49,7 @@ class RteService implements SingletonInterface {
      * @return array
      */
     protected function getRteConfiguration(string $table, string $field): array {
-        return GeneralUtility::makeInstance(Richtext::class)->getConfiguration($table, $field, $GLOBALS['TSFE']->id, 0, [
+        return GeneralUtility::makeInstance(Richtext::class)->getConfiguration($table, $field, $GLOBALS['TSFE']->id ?? 0, 0, [
             'type' => 'text',
             'enableRichtext' => TRUE,
         ]);
