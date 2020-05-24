@@ -2,6 +2,7 @@
 namespace Dagou\DagouExtbase\Validation\Validator\Database;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -24,6 +25,15 @@ abstract class AbstractDatabaseValidator extends AbstractValidator {
      * @return int
      */
     protected function count($value): int {
+        return (int)$this->getQueryBuider($value)->execute()->fetchColumn(0);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder
+     */
+    protected function getQueryBuider($value): QueryBuilder {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->options['table'])
             ->count($this->options['field'])
             ->from($this->options['table']);
@@ -38,6 +48,6 @@ abstract class AbstractDatabaseValidator extends AbstractValidator {
             $queryBuilder->getRestrictions()->removeByType(HiddenRestriction::class);
         }
 
-        return (int)$queryBuilder->execute()->fetchColumn(0);
+        return $queryBuilder;
     }
 }
