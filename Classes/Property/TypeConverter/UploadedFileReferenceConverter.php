@@ -148,7 +148,7 @@ class UploadedFileReferenceConverter extends AbstractTypeConverter {
         if (($allowedFileExtensions = $configuration->getConfigurationValue(__CLASS__, self::CONFIGURATION_ALLOWED_FILE_EXTENSIONS)) !== NULL) {
             $filePathInfo = PathUtility::pathinfo($file['name']);
 
-            if (!GeneralUtility::inList($allowedFileExtensions, $filePathInfo['extension'])) {
+            if (!GeneralUtility::inList(strtolower($allowedFileExtensions), strtolower($filePathInfo['extension']))) {
                 throw new InvalidFileExtensionException('extension', 1575439268);
             }
         }
