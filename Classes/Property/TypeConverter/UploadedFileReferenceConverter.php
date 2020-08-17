@@ -16,6 +16,7 @@ use TYPO3\CMS\Extbase\Property\TypeConverter\AbstractTypeConverter;
 
 class UploadedFileReferenceConverter extends AbstractTypeConverter {
     const CONFIGURATION_ALLOWED_FILE_EXTENSIONS = 'extensions';
+    const CONFIGURATION_FILENAME = 'filename';
     const CONFIGURATION_MAX_UPLOAD_FILE_SIZE = 'size';
     const CONFIGURATION_UPLOAD_CONFLICT_MODE = 'conflict';
     const CONFIGURATION_UPLOAD_FOLDER = 'folder';
@@ -157,6 +158,10 @@ class UploadedFileReferenceConverter extends AbstractTypeConverter {
             if ($file['size'] > GeneralUtility::getBytesFromSizeMeasurement($maxUploadFileSize)) {
                 throw new FileSizeTooLargeException('size', 1575439957);
             }
+        }
+
+        if (($filenameParser = $configuration->getConfigurationValue(__CLASS__, self::CONFIGURATION_FILENAME)) && is_callable($filenameParser)) {
+            $file['name'] = $filenameParser($file['name']);
         }
 
         $uploadFolderId = $configuration->getConfigurationValue(__CLASS__, self::CONFIGURATION_UPLOAD_FOLDER) ?: $this->defaultUploadFolder;
