@@ -11,6 +11,7 @@ class InListValidator extends AbstractValidator{
      */
     protected $supportedOptions = [
         'list' => [[], 'The value list', 'mixed'],
+        'strict' => [FALSE, 'Is strict or not', 'boolean'],
     ];
 
     /**
@@ -50,7 +51,7 @@ class InListValidator extends AbstractValidator{
 
             return FALSE;
         } else {
-            return in_array($value, $this->options['list']);
+            return in_array($value, $this->options['list'], $this->options['strict']);
         }
     }
 }

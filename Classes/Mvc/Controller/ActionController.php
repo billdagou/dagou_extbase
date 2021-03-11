@@ -4,14 +4,20 @@ namespace Dagou\DagouExtbase\Mvc\Controller;
 use Dagou\DagouExtbase\Property\TypeConverter\UploadedFileReferenceConverter;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Annotation\Inject;
+use TYPO3\CMS\Extbase\Service\ExtensionService;
 
 class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
     /**
      * @var \TYPO3\CMS\Extbase\Service\ExtensionService
-     * @Inject
      */
     protected $extensionService;
+
+    /**
+     * @param \TYPO3\CMS\Extbase\Service\ExtensionService $extensionService
+     */
+    public function injectExtensionService(ExtensionService $extensionService) {
+        $this->extensionService = $extensionService;
+    }
 
     /**
      * @param string $extensionName
@@ -20,7 +26,7 @@ class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @param string $messageTitle
      * @param int $severity
      * @param bool $storeInSession
-     * @see \TYPO3\CMS\Extbase\Mvc\Controller\AbstractController::addFlashMessage()
+     * @see \TYPO3\CMS\Extbase\Mvc\Controller\ActionController::addFlashMessage()
      */
     public function addExternalFlashMessage(string $extensionName, string $pluginName, string $messageBody, string $messageTitle = '', $severity = FlashMessage::OK, bool $storeInSession = TRUE) {
         $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $messageBody, $messageTitle, $severity, $storeInSession);
@@ -33,7 +39,7 @@ class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
     /**
      * @return bool
      */
-    protected function getErrorFlashMessage() {
+    protected function getErrorFlashMessage(): bool {
         return FALSE;
     }
 
@@ -45,8 +51,8 @@ class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
     protected function setTypeConverterConfigurationForFileUpload(string $argumentName, string $propertyName, array $overrideConfiguration = []) {
         $configuration = [
             UploadedFileReferenceConverter::CONFIGURATION_ALLOWED_FILE_EXTENSIONS => $overrideConfiguration['ext'] ?: $this->settings[$propertyName]['ext'] ?: $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'],
-            UploadedFileReferenceConverter::CONFIGURATION_FILENAME => $overrideConfiguration['filename'] ?: NULL,
             UploadedFileReferenceConverter::CONFIGURATION_MAX_UPLOAD_FILE_SIZE => $overrideConfiguration['size'] ?: $this->settings[$propertyName]['size'] ?: NULL,
+            UploadedFileReferenceConverter::CONFIGURATION_RENAME => $overrideConfiguration['rename'] ?: NULL,
             UploadedFileReferenceConverter::CONFIGURATION_UPLOAD_CONFLICT_MODE => $overrideConfiguration['conflict'] ?: $this->settings[$propertyName]['conflict'] ?: NULL,
             UploadedFileReferenceConverter::CONFIGURATION_UPLOAD_FOLDER => $overrideConfiguration['folder'] ?: $this->settings[$propertyName]['folder'] ?: NULL,
         ];

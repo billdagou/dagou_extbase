@@ -11,47 +11,59 @@ class RteService implements SingletonInterface {
      * @param string $value
      * @param string $table
      * @param string $field
+     * @param string $recordType
      *
      * @return string
      */
-    public function transformDbToRte(string $value, string $table, string $field): string {
-        return $this->getRteHtmlParser($table, $field)->RTE_transform($value, NULL, 'rte', $this->getRteConfiguration($table, $field));
+    public function transformDbToRte(string $value, string $table, string $field, string $recordType = '0'): string {
+        return $this->getRteHtmlParser()
+            ->transformTextForPersistence(
+                $value,
+                $this->getRteConfiguration($table, $field, $recordType)
+            );
     }
 
     /**
      * @param string $value
      * @param string $table
      * @param string $field
+     * @param string $recordType
      *
      * @return string
      */
-    public function transformRteToDb(string $value, string $table, string $field): string {
-        return $this->getRteHtmlParser($table, $field)->RTE_transform($value, NULL, 'db', $this->getRteConfiguration($table, $field));
+    public function transformRteToDb(string $value, string $table, string $field, string $recordType = '0'): string {
+        return $this->getRteHtmlParser()
+            ->transformTextForPersistence(
+                $value,
+                $this->getRTEConfiguration($table, $field, $recordType)
+            );
     }
 
     /**
-     * @param string $table
-     * @param string $field
-     *
      * @return \TYPO3\CMS\Core\Html\RteHtmlParser
      */
-    protected function getRteHtmlParser(string $table, string $field): RteHtmlParser {
-        $rteHtmlParser = GeneralUtility::makeInstance(RteHtmlParser::class);
-        $rteHtmlParser->init($table.':'.$field, $GLOBALS['TSFE']->id);
-
-        return $rteHtmlParser;
+    protected function getRteHtmlParser(): RteHtmlParser {
+        return GeneralUtility::makeInstance(RteHtmlParser::class);
     }
 
     /**
      * @param string $table
      * @param string $field
+     * @param string $recordType
      *
      * @return array
      */
-    protected function getRteConfiguration(string $table, string $field): array {
-        return GeneralUtility::makeInstance(Richtext::class)->getConfiguration($table, $field, $GLOBALS['TSFE']->id ?? 0, 0, [
-            'type' => 'text',
-            'enableRichtext' => TRUE,
-        ]);
+    protected function getRteConfiguration(string $table, string $field, string $recordType): array {
+        return GeneralUtility::makeInstance(Richtext::class)
+            ->getConfiguration(
+                $table,
+                $field,
+                $GLOBALS['TSFE']->id ?? 0,
+                $recordType,
+                [
+                    'type' => 'text',
+                    'enableRichtext' => TRUE,
+                ]
+            )['proc.'] ?? [];
     }
 }
