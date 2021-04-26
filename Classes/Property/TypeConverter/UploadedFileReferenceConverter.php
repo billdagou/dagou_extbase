@@ -6,14 +6,17 @@ use Dagou\DagouExtbase\Property\Exception\InvalidFileExtensionException;
 use TYPO3\CMS\Core\Resource\DuplicationBehavior;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\FileReference;
+use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Resource\Security\FileNameValidator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Extbase\Annotation\Inject;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference as ExtBaseFileReference;
 use TYPO3\CMS\Extbase\Error\Error;
+use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationInterface;
 use TYPO3\CMS\Extbase\Property\TypeConverter\AbstractTypeConverter;
+use TYPO3\CMS\Extbase\Security\Cryptography\HashService;
 
 class UploadedFileReferenceConverter extends AbstractTypeConverter {
     const CONFIGURATION_ALLOWED_FILE_EXTENSIONS = 'extensions';
@@ -47,19 +50,37 @@ class UploadedFileReferenceConverter extends AbstractTypeConverter {
     protected $defaultConflictMode = DuplicationBehavior::RENAME;
     /**
      * @var \TYPO3\CMS\Extbase\Security\Cryptography\HashService
-     * @Inject
      */
     protected $hashService;
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface
-     * @Inject
      */
     protected $persistenceManager;
     /**
      * @var \TYPO3\CMS\Core\Resource\ResourceFactory
-     * @Inject
      */
     protected $resourceFactory;
+
+    /**
+     * @param \TYPO3\CMS\Extbase\Security\Cryptography\HashService $hashService
+     */
+    public function injectHashService(HashService $hashService) {
+        $this->hashService = $hashService;
+    }
+
+    /**
+     * @param \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface $persistenceManager
+     */
+    public function injectPersistenceManager(PersistenceManagerInterface $persistenceManager) {
+        $this->persistenceManager = $persistenceManager;
+    }
+
+    /**
+     * @param \TYPO3\CMS\Core\Resource\ResourceFactory $resourceFactory
+     */
+    public function injectResourceFactory(ResourceFactory $resourceFactory) {
+        $this->resourceFactory = $resourceFactory;
+    }
 
     /**
      * @param mixed $source
