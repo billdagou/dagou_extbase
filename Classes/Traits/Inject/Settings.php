@@ -3,7 +3,7 @@ namespace Dagou\DagouExtbase\Traits\Inject;
 
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
-class Settings {
+trait Settings {
     /**
      * @var \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface
      */
