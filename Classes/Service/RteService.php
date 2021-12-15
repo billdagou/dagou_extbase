@@ -8,6 +8,18 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class RteService implements SingletonInterface {
     /**
+     * @var \TYPO3\CMS\Core\Html\RteHtmlParser
+     */
+    protected $rteHtmlParser;
+
+    /**
+     * @param \TYPO3\CMS\Core\Html\RteHtmlParser $rteHtmlParser
+     */
+    public function injectRteHtmlParser(RteHtmlParser $rteHtmlParser) {
+        $this->rteHtmlParser = $rteHtmlParser;
+    }
+
+    /**
      * @param string $value
      * @param string $table
      * @param string $field
@@ -16,11 +28,10 @@ class RteService implements SingletonInterface {
      * @return string
      */
     public function transformDbToRte(string $value, string $table, string $field, string $recordType = '0'): string {
-        return $this->getRteHtmlParser()
-            ->transformTextForPersistence(
-                $value,
-                $this->getRteConfiguration($table, $field, $recordType)
-            );
+        return $this->rteHtmlParser->transformTextForPersistence(
+            $value,
+            $this->getRteConfiguration($table, $field, $recordType)
+        );
     }
 
     /**
@@ -32,18 +43,10 @@ class RteService implements SingletonInterface {
      * @return string
      */
     public function transformRteToDb(string $value, string $table, string $field, string $recordType = '0'): string {
-        return $this->getRteHtmlParser()
-            ->transformTextForPersistence(
-                $value,
-                $this->getRTEConfiguration($table, $field, $recordType)
-            );
-    }
-
-    /**
-     * @return \TYPO3\CMS\Core\Html\RteHtmlParser
-     */
-    protected function getRteHtmlParser(): RteHtmlParser {
-        return GeneralUtility::makeInstance(RteHtmlParser::class);
+        return $this->rteHtmlParser->transformTextForPersistence(
+            $value,
+            $this->getRTEConfiguration($table, $field, $recordType)
+        );
     }
 
     /**
