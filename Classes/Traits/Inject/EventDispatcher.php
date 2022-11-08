@@ -4,10 +4,7 @@ namespace Dagou\DagouExtbase\Traits\Inject;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 trait EventDispatcher {
-    /**
-     * @var \Psr\EventDispatcher\EventDispatcherInterface
-     */
-    protected $eventDispatcher;
+    protected EventDispatcherInterface $eventDispatcher;
 
     /**
      * @param \Psr\EventDispatcher\EventDispatcherInterface $eventDispatcher

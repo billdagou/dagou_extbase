@@ -2,10 +2,7 @@
 namespace Dagou\DagouExtbase\Traits\Inject;
 
 trait PropertyMapper {
-    /**
-     * @var \TYPO3\CMS\Extbase\Property\PropertyMapper
-     */
-    protected $propertyMapper;
+    protected \TYPO3\CMS\Extbase\Property\PropertyMapper $propertyMapper;
 
     /**
      * @param \TYPO3\CMS\Extbase\Property\PropertyMapper $propertyMapper

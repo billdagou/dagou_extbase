@@ -2,10 +2,7 @@
 namespace Dagou\DagouExtbase\Traits\Inject;
 
 trait UriBuilder {
-    /**
-     * @var \TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder
-     */
-    protected $uriBuilder;
+    protected \TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder $uriBuilder;
 
     /**
      * @param \TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder $uriBuilder

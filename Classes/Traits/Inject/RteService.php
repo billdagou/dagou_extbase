@@ -2,10 +2,7 @@
 namespace Dagou\DagouExtbase\Traits\Inject;
 
 trait RteService {
-    /**
-     * @var \Dagou\DagouExtbase\Service\RteService
-     */
-    protected $rteService;
+    protected \Dagou\DagouExtbase\Service\RteService $rteService;
 
     /**
      * @param \Dagou\DagouExtbase\Service\RteService $rteService

@@ -2,10 +2,7 @@
 namespace Dagou\DagouExtbase\Traits\Inject;
 
 trait ExtensionService {
-    /**
-     * @var \TYPO3\CMS\Extbase\Service\ExtensionService
-     */
-    protected $extensionService;
+    protected \TYPO3\CMS\Extbase\Service\ExtensionService $extensionService;
 
     /**
      * @param \TYPO3\CMS\Extbase\Service\ExtensionService $extensionService

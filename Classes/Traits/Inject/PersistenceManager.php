@@ -4,10 +4,7 @@ namespace Dagou\DagouExtbase\Traits\Inject;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 
 trait PersistenceManager {
-    /**
-     * @var \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface
-     */
-    protected $persistenceManager;
+    protected PersistenceManagerInterface $persistenceManager;
 
     /**
      * @param \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface $persistenceManager

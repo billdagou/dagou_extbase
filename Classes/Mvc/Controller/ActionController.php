@@ -2,22 +2,12 @@
 namespace Dagou\DagouExtbase\Mvc\Controller;
 
 use Dagou\DagouExtbase\Property\TypeConverter\UploadedFileReferenceConverter;
+use Dagou\DagouExtbase\Traits\Inject\ExtensionService;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Service\ExtensionService;
 
 class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
-    /**
-     * @var \TYPO3\CMS\Extbase\Service\ExtensionService
-     */
-    protected $extensionService;
-
-    /**
-     * @param \TYPO3\CMS\Extbase\Service\ExtensionService $extensionService
-     */
-    public function injectExtensionService(ExtensionService $extensionService) {
-        $this->extensionService = $extensionService;
-    }
+    use ExtensionService;
 
     /**
      * @param string $extensionName

@@ -3,22 +3,23 @@ namespace Dagou\DagouExtbase\Property\TypeConverter;
 
 use Dagou\DagouExtbase\Property\Exception\FileSizeTooLargeException;
 use Dagou\DagouExtbase\Property\Exception\InvalidFileExtensionException;
+use Dagou\DagouExtbase\Traits\Inject\HashService;
+use Dagou\DagouExtbase\Traits\Inject\PersistenceManager;
+use Dagou\DagouExtbase\Traits\Inject\ResourceFactory;
 use TYPO3\CMS\Core\Resource\DuplicationBehavior;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\FileReference;
-use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Resource\Security\FileNameValidator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
-use TYPO3\CMS\Extbase\Annotation\Inject;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference as ExtBaseFileReference;
 use TYPO3\CMS\Extbase\Error\Error;
-use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationInterface;
 use TYPO3\CMS\Extbase\Property\TypeConverter\AbstractTypeConverter;
-use TYPO3\CMS\Extbase\Security\Cryptography\HashService;
 
 class UploadedFileReferenceConverter extends AbstractTypeConverter {
+    use HashService, PersistenceManager, ResourceFactory;
+
     const CONFIGURATION_ALLOWED_FILE_EXTENSIONS = 'extensions';
     const CONFIGURATION_MAX_UPLOAD_FILE_SIZE = 'size';
     const CONFIGURATION_RENAME = 'rename';
@@ -36,51 +37,10 @@ class UploadedFileReferenceConverter extends AbstractTypeConverter {
      * @var int
      */
     protected $priority = 30;
-    /**
-     * @var array
-     */
-    protected $fileReferences = [];
-    /**
-     * @var string
-     */
-    protected $defaultUploadFolder = '1:/user_upload/';
-    /**
-     * @var string
-     */
-    protected $defaultConflictMode = DuplicationBehavior::RENAME;
-    /**
-     * @var \TYPO3\CMS\Extbase\Security\Cryptography\HashService
-     */
-    protected $hashService;
-    /**
-     * @var \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface
-     */
-    protected $persistenceManager;
-    /**
-     * @var \TYPO3\CMS\Core\Resource\ResourceFactory
-     */
-    protected $resourceFactory;
 
-    /**
-     * @param \TYPO3\CMS\Extbase\Security\Cryptography\HashService $hashService
-     */
-    public function injectHashService(HashService $hashService) {
-        $this->hashService = $hashService;
-    }
-
-    /**
-     * @param \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface $persistenceManager
-     */
-    public function injectPersistenceManager(PersistenceManagerInterface $persistenceManager) {
-        $this->persistenceManager = $persistenceManager;
-    }
-
-    /**
-     * @param \TYPO3\CMS\Core\Resource\ResourceFactory $resourceFactory
-     */
-    public function injectResourceFactory(ResourceFactory $resourceFactory) {
-        $this->resourceFactory = $resourceFactory;
-    }
+    protected array $fileReferences = [];
+    protected string $defaultUploadFolder = '1:/user_upload/';
+    protected string $defaultConflictMode = DuplicationBehavior::RENAME;
 
     /**
      * @param mixed $source
@@ -90,7 +50,7 @@ class UploadedFileReferenceConverter extends AbstractTypeConverter {
      *
      * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference|\TYPO3\CMS\Extbase\Error\Error|NULL
      */
-    public function convertFrom($source, $targetType, array $convertedChildProperties = [], PropertyMappingConfigurationInterface $configuration = NULL) {
+    public function convertFrom($source, string $targetType, array $convertedChildProperties = [], PropertyMappingConfigurationInterface $configuration = NULL) {
         if (!isset($source['error']) || $source['error'] === UPLOAD_ERR_NO_FILE) {
             if ($source['__resource']) {
                 $resource = $this->hashService->validateAndStripHmac($source['__resource']);

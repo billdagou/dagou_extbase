@@ -1,5 +1,0 @@
-config.tx_extbase {
-    mvc {
-        callDefaultActionIfActionCantBeResolved = 1
-    }
-}

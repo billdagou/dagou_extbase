@@ -11,9 +11,10 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository {
     /**
      * @param object $object
      *
-     * @return \Dagou\DagouExtbase\Persistence\Repository
+     * @return $this
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
-    public function add($object): Repository {
+    public function add($object): self {
         parent::add($object);
 
         return $this;
@@ -22,9 +23,10 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository {
     /**
      * @param object $object
      *
-     * @return \Dagou\DagouExtbase\Persistence\Repository
+     * @return $this
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
-    public function remove($object): Repository {
+    public function remove($object): self {
         parent::remove($object);
 
         return $this;
@@ -33,18 +35,20 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository {
     /**
      * @param object $modifiedObject
      *
-     * @return \Dagou\DagouExtbase\Persistence\Repository
+     * @return $this
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      */
-    public function update($modifiedObject): Repository {
+    public function update($modifiedObject): self {
         parent::update($modifiedObject);
 
         return $this;
     }
 
     /**
-     * @return \Dagou\DagouExtbase\Persistence\Repository
+     * @return $this
      */
-    public function persist(): Repository {
+    public function persist(): self {
         $this->persistenceManager->persistAll();
 
         return $this;
@@ -63,9 +67,10 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository {
     }
 
     /**
-     * @param mixed $criteria
+     * @param null $criteria
      *
      * @return \TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
     public function findOne($criteria = NULL): DomainObjectInterface {
         $query = $this->createCriteriaQuery($criteria);
@@ -74,9 +79,10 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository {
     }
 
     /**
-     * @param mixed $criteria
+     * @param null $criteria
      *
      * @return int
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
     public function count($criteria = NULL): int {
         $query = $this->createCriteriaQuery($criteria);
@@ -85,7 +91,7 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository {
     }
 
     /**
-     * @param mixed $criteria
+     * @param null $criteria
      *
      * @return \TYPO3\CMS\Extbase\Persistence\QueryInterface
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
