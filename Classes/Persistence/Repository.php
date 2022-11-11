@@ -67,7 +67,7 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository {
     }
 
     /**
-     * @param null $criteria
+     * @param mixed $criteria
      *
      * @return \TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
@@ -79,7 +79,7 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository {
     }
 
     /**
-     * @param null $criteria
+     * @param mixed $criteria
      *
      * @return int
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
@@ -91,7 +91,7 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository {
     }
 
     /**
-     * @param null $criteria
+     * @param mixed $criteria
      *
      * @return \TYPO3\CMS\Extbase\Persistence\QueryInterface
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException

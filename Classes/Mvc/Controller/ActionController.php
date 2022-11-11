@@ -3,6 +3,7 @@ namespace Dagou\DagouExtbase\Mvc\Controller;
 
 use Dagou\DagouExtbase\Property\TypeConverter\UploadedFileReferenceConverter;
 use Dagou\DagouExtbase\Traits\Inject\ExtensionService;
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -16,14 +17,15 @@ class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @param string $messageTitle
      * @param int $severity
      * @param bool $storeInSession
+     *
+     * @throws \TYPO3\CMS\Core\Exception
      * @see \TYPO3\CMS\Extbase\Mvc\Controller\ActionController::addFlashMessage()
      */
-    public function addExternalFlashMessage(string $extensionName, string $pluginName, string $messageBody, string $messageTitle = '', $severity = FlashMessage::OK, bool $storeInSession = TRUE) {
+    public function addExternalFlashMessage(string $extensionName, string $pluginName, string $messageBody, string $messageTitle = '', int $severity = AbstractMessage::OK, bool $storeInSession = TRUE) {
         $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $messageBody, $messageTitle, $severity, $storeInSession);
 
-        $this->controllerContext
-            ->getFlashMessageQueue('extbase.flashmessages.'.$this->extensionService->getPluginNamespace($extensionName, $pluginName))
-                ->enqueue($flashMessage);
+        $this->getFlashMessageQueue('extbase.flashmessages.'.$this->extensionService->getPluginNamespace($extensionName, $pluginName))
+            ->enqueue($flashMessage);
     }
 
     /**

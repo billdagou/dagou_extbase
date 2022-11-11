@@ -7,10 +7,7 @@ use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class RteService implements SingletonInterface {
-    /**
-     * @var \TYPO3\CMS\Core\Html\RteHtmlParser
-     */
-    protected $rteHtmlParser;
+    protected RteHtmlParser $rteHtmlParser;
 
     /**
      * @param \TYPO3\CMS\Core\Html\RteHtmlParser $rteHtmlParser

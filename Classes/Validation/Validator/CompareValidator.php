@@ -15,6 +15,11 @@ class CompareValidator extends AbstractValidator {
         'property' => ['', 'Property path', 'string'],
     ];
 
+    /**
+     * @param mixed $value
+     *
+     * @throws \TYPO3\CMS\Extbase\Validation\Exception\InvalidValidationOptionsException
+     */
     public function isValid($value) {
         if ($this->options['property']) {
             foreach (explode('.', $this->options['property']) as $property) {

@@ -1,5 +1,5 @@
 <?php
-namespace Dagou\DagouExtbase\Validation\Validator\Database;
+namespace Dagou\DagouExtbase\Validation\Validator;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -15,17 +15,20 @@ abstract class AbstractDatabaseValidator extends AbstractValidator {
     protected $supportedOptions = [
         'table' => ['', 'Table name', 'string', TRUE],
         'field' => ['', 'Field name', 'string', TRUE],
+        'exclude' => [[], 'Excluded criteria', 'array'],
         'enableDeleted' => [TRUE, 'Enable deleted field', 'boolean'],
         'enableHidden' => [TRUE, 'Enable hidden field', 'boolean'],
     ];
 
     /**
-     * @param mixed $value
+     * @param $value
      *
      * @return int
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Driver\Exception
      */
     protected function count($value): int {
-        return (int)$this->getQueryBuider($value)->execute()->fetchColumn(0);
+        return (int)$this->getQueryBuilder($value)->execute()->fetchOne();
     }
 
     /**
@@ -33,12 +36,16 @@ abstract class AbstractDatabaseValidator extends AbstractValidator {
      *
      * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder
      */
-    protected function getQueryBuider($value): QueryBuilder {
+    protected function getQueryBuilder($value): QueryBuilder {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->options['table'])
             ->count($this->options['field'])
             ->from($this->options['table']);
 
         $queryBuilder->where($queryBuilder->expr()->eq($this->options['field'], $queryBuilder->createNamedParameter($value)));
+
+        foreach ($this->options['exclude'] as $field => $value) {
+            $queryBuilder->andWhere($queryBuilder->expr()->neq($field, $queryBuilder->createNamedParameter($value)));
+        }
 
         if (!$this->options['enableDeleted']) {
             $queryBuilder->getRestrictions()->removeByType(DeletedRestriction::class);
