@@ -9,7 +9,7 @@ class UniqueValidator extends AbstractDatabaseValidator {
      * @throws \Doctrine\DBAL\Driver\Exception
      */
     protected function isValid($value) {
-        if ($this->count($value) !== 1) {
+        if ($this->count($value) !== 0) {
             $this->addError('unique', 1590306297);
         }
     }
