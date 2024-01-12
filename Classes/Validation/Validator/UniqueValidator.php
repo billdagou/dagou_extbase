@@ -5,10 +5,9 @@ class UniqueValidator extends AbstractDatabaseValidator {
     /**
      * @param mixed $value
      *
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws \Doctrine\DBAL\Exception
      */
-    protected function isValid($value) {
+    protected function isValid(mixed $value): void {
         if ($this->count($value) !== 0) {
             $this->addError('unique', 1590306297);
         }

@@ -1,15 +1,15 @@
 <?php
 namespace Dagou\DagouExtbase\Validation\Validator;
 
-class IntegerValidator extends \TYPO3\CMS\Extbase\Validation\Validator\IntegerValidator {
+use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
+
+class IntegerValidator extends AbstractValidator {
     /**
-     * @param string $translateKey
-     * @param string $extensionName
-     * @param array $arguments
-     *
-     * @return string
+     * @param mixed $value
      */
-    protected function translateErrorMessage($translateKey, $extensionName, $arguments = []): string {
-        return 'integer';
+    public function isValid(mixed $value): void {
+        if (filter_var($value, FILTER_VALIDATE_INT) === FALSE) {
+            $this->addError('integer', 1221560494);
+        }
     }
 }

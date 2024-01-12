@@ -1,15 +1,15 @@
 <?php
 namespace Dagou\DagouExtbase\Validation\Validator;
 
-class StringValidator extends \TYPO3\CMS\Extbase\Validation\Validator\StringValidator {
+use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
+
+class StringValidator extends AbstractValidator {
     /**
-     * @param string $translateKey
-     * @param string $extensionName
-     * @param array $arguments
-     *
-     * @return string
+     * @param mixed $value
      */
-    protected function translateErrorMessage($translateKey, $extensionName, $arguments = []): string {
-        return 'string';
+    public function isValid(mixed $value): void {
+        if (!is_string($value)) {
+            $this->addError('string', 1238108067);
+        }
     }
 }

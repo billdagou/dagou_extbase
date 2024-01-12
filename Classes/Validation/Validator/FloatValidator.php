@@ -1,15 +1,19 @@
 <?php
 namespace Dagou\DagouExtbase\Validation\Validator;
 
-class FloatValidator extends \TYPO3\CMS\Extbase\Validation\Validator\FloatValidator {
+use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
+
+class FloatValidator extends AbstractValidator {
     /**
-     * @param string $translateKey
-     * @param string $extensionName
-     * @param array $arguments
-     *
-     * @return string
+     * @param mixed $value
      */
-    protected function translateErrorMessage($translateKey, $extensionName, $arguments = []): string {
-        return 'float';
+    public function isValid(mixed $value): void {
+        if (is_float($value)) {
+            return;
+        }
+
+        if (!is_string($value) || !str_contains($value, '.') || preg_match('/^[0-9.e+-]+$/', $value) !== 1) {
+            $this->addError('float', 1221560288);
+        }
     }
 }

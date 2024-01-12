@@ -10,7 +10,7 @@ class CompareValidator extends AbstractValidator {
      * @var array
      */
     protected $supportedOptions = [
-        'value' => ['', 'The timestamp to compare', 'mixed', TRUE],
+        'value' => ['', 'The value to compare with', 'mixed', TRUE],
         'op' => ['', 'Greater than or equal', 'string', TRUE],
         'property' => ['', 'Property path', 'string'],
     ];
@@ -20,7 +20,7 @@ class CompareValidator extends AbstractValidator {
      *
      * @throws \TYPO3\CMS\Extbase\Validation\Exception\InvalidValidationOptionsException
      */
-    public function isValid($value) {
+    public function isValid(mixed $value): void {
         if ($this->options['property']) {
             foreach (explode('.', $this->options['property']) as $property) {
                 if ($value instanceof DomainObjectInterface && $value->_hasProperty($property)) {
@@ -45,26 +45,17 @@ class CompareValidator extends AbstractValidator {
      *
      * @return bool
      */
-    protected function compare($value1, $value2, string $op): bool {
-        switch ($op) {
-            case 'eq':
-                return $value1 == $value2;
-            case 'seq':
-                return $value1 === $value2;
-            case 'gt':
-                return $value1 > $value2;
-            case 'gte':
-                return $value1 >= $value2;
-            case 'lt':
-                return $value1 < $value2;
-            case 'lte':
-                return $value1 <= $value2;
-            case 'neq':
-                return $value1 != $value2;
-            case 'nseq':
-                return $value1 !== $value2;
-        }
-
-        return FALSE;
+    protected function compare(mixed $value1, mixed $value2, string $op): bool {
+        return match ($op) {
+            'eq' => $value1 == $value2,
+            'seq' => $value1 === $value2,
+            'gt' => $value1 > $value2,
+            'gte' => $value1 >= $value2,
+            'lt' => $value1 < $value2,
+            'lte' => $value1 <= $value2,
+            'neq' => $value1 != $value2,
+            'nseq' => $value1 !== $value2,
+            default => FALSE,
+        };
     }
 }

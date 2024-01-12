@@ -1,15 +1,15 @@
 <?php
 namespace Dagou\DagouExtbase\Validation\Validator;
 
-class NumberValidator extends \TYPO3\CMS\Extbase\Validation\Validator\NumberValidator {
+use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
+
+class NumberValidator extends AbstractValidator {
     /**
-     * @param string $translateKey
-     * @param string $extensionName
-     * @param array $arguments
-     *
-     * @return string
+     * @param mixed $value
      */
-    protected function translateErrorMessage($translateKey, $extensionName, $arguments = []): string {
-        return 'number';
+    public function isValid(mixed $value): void {
+        if (!is_numeric($value)) {
+            $this->addError('number', 1221563685);
+        }
     }
 }

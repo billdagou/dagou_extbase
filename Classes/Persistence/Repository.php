@@ -60,7 +60,7 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository {
      * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
-    public function find($criteria = NULL): QueryResultInterface {
+    public function find(mixed $criteria = NULL): QueryResultInterface {
         $query = $this->createCriteriaQuery($criteria);
 
         return $query->execute();
@@ -72,7 +72,7 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository {
      * @return \TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
-    public function findOne($criteria = NULL): DomainObjectInterface {
+    public function findOne(mixed $criteria = NULL): DomainObjectInterface {
         $query = $this->createCriteriaQuery($criteria);
 
         return $query->execute()->getFirst();
@@ -84,7 +84,7 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository {
      * @return int
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
-    public function count($criteria = NULL): int {
+    public function count(mixed $criteria = NULL): int {
         $query = $this->createCriteriaQuery($criteria);
 
         return $query->execute()->count();
@@ -96,7 +96,7 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository {
      * @return \TYPO3\CMS\Extbase\Persistence\QueryInterface
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
-    protected function createCriteriaQuery($criteria = NULL): QueryInterface {
+    protected function createCriteriaQuery(mixed $criteria = NULL): QueryInterface {
         if ($criteria !== NULL && !is_array($criteria) && !$criteria instanceof AbstractCriteria) {
             throw new IllegalObjectTypeException('The criteria given to createCriteriaQuery() must be NULL, array or of ' . AbstractCriteria::class . '.', 1588312025);
         }

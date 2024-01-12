@@ -1,15 +1,16 @@
 <?php
 namespace Dagou\DagouExtbase\Validation\Validator;
 
-class UrlValidator extends \TYPO3\CMS\Extbase\Validation\Validator\UrlValidator {
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
+
+class UrlValidator extends AbstractValidator {
     /**
-     * @param string $translateKey
-     * @param string $extensionName
-     * @param array $arguments
-     *
-     * @return string
+     * @param mixed $value
      */
-    protected function translateErrorMessage($translateKey, $extensionName, $arguments = []): string {
-        return 'url';
+    public function isValid(mixed $value): void {
+        if (!is_string($value) || !GeneralUtility::isValidUrl($value)) {
+            $this->addError('url', 1238108078);
+        }
     }
 }

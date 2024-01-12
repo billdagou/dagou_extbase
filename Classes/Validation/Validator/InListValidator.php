@@ -17,7 +17,7 @@ class InListValidator extends AbstractValidator{
     /**
      * @param mixed $value
      */
-    public function isValid($value) {
+    public function isValid(mixed $value): void {
         if (is_array($value) || $value instanceof \Iterator) {
             foreach ($value as $v) {
                 if (!$this->isInList($v)) {
@@ -38,13 +38,13 @@ class InListValidator extends AbstractValidator{
      *
      * @return bool
      */
-    protected function isInList($value): bool {
+    protected function isInList(mixed $value): bool {
         if ($this->options['list'] instanceof ObjectStorage) {
             return $this->options['list']->contains($value);
         } elseif ($this->options['list'] instanceof QueryResultInterface) {
             /** @var \TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface $domainObject */
             foreach ($this->options['list'] as $domainObject) {
-                if ($value->getUid() === $domainObject->getUid()) {
+                if ($value === $domainObject) {
                     return TRUE;
                 }
             }

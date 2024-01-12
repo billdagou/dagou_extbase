@@ -21,22 +21,21 @@ abstract class AbstractDatabaseValidator extends AbstractValidator {
     ];
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @return int
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws \Doctrine\DBAL\Exception
      */
-    protected function count($value): int {
-        return (int)$this->getQueryBuilder($value)->execute()->fetchOne();
+    protected function count(mixed $value): int {
+        return (int)$this->getQueryBuilder($value)->executeQuery()->fetchOne();
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder
      */
-    protected function getQueryBuilder($value): QueryBuilder {
+    protected function getQueryBuilder(mixed $value): QueryBuilder {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->options['table'])
             ->count($this->options['field'])
             ->from($this->options['table']);

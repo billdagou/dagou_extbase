@@ -6,3 +6,10 @@ services:
 
     Dagou\DagouExtbase\:
         resource: '../Classes/*'
+
+    Dagou\DagouExtbase\Property\TypeConverter\UploadedFileReferenceConverter:
+        tags:
+            - name: extbase.type_converter
+              priority: 30
+              target: TYPO3\CMS\Extbase\Domain\Model\FileReference
+              sources: array

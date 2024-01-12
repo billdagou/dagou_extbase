@@ -12,7 +12,7 @@ use TYPO3\CMS\Core\Resource\FileReference;
 use TYPO3\CMS\Core\Resource\Security\FileNameValidator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
-use TYPO3\CMS\Extbase\Domain\Model\FileReference as ExtBaseFileReference;
+use TYPO3\CMS\Extbase\Domain\Model\FileReference as ExtbaseFileReference;
 use TYPO3\CMS\Extbase\Error\Error;
 use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationInterface;
 use TYPO3\CMS\Extbase\Property\TypeConverter\AbstractTypeConverter;
@@ -26,19 +26,6 @@ class UploadedFileReferenceConverter extends AbstractTypeConverter {
     const CONFIGURATION_UPLOAD_CONFLICT_MODE = 'conflict';
     const CONFIGURATION_UPLOAD_FOLDER = 'folder';
 
-    /**
-     * @var array
-     */
-    protected $sourceTypes = ['array'];
-    /**
-     * @var string
-     */
-    protected $targetType = ExtBaseFileReference::class;
-    /**
-     * @var int
-     */
-    protected $priority = 30;
-
     protected array $fileReferences = [];
     protected string $defaultUploadFolder = '1:/user_upload/';
     protected string $defaultConflictMode = DuplicationBehavior::RENAME;
@@ -49,7 +36,7 @@ class UploadedFileReferenceConverter extends AbstractTypeConverter {
      * @param array $convertedChildProperties
      * @param \TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationInterface|null $configuration
      *
-     * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference|\TYPO3\CMS\Extbase\Error\Error|null
+     * @return mixed|\TYPO3\CMS\Extbase\Domain\Model\FileReference|\TYPO3\CMS\Extbase\Error\Error|null
      * @throws \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException
      * @throws \TYPO3\CMS\Core\Resource\Exception\ResourceDoesNotExistException
      * @throws \TYPO3\CMS\Extbase\Security\Exception\InvalidArgumentForHashGenerationException
@@ -57,13 +44,13 @@ class UploadedFileReferenceConverter extends AbstractTypeConverter {
      */
     public function convertFrom($source, string $targetType, array $convertedChildProperties = [], ?PropertyMappingConfigurationInterface $configuration = NULL) {
         if (!isset($source['error']) || $source['error'] === UPLOAD_ERR_NO_FILE) {
-            if ($source['__resource']) {
+            if ($source['__resource'] ?? FALSE) {
                 $resource = $this->hashService->validateAndStripHmac($source['__resource']);
 
                 return $this->createExtbaseFileReferenceFromFile(
                     $this->resourceFactory->getFileObject($resource)
                 );
-            } elseif ($source['__identity']) {
+            } elseif ($source['__identity'] ?? FALSE) {
                 $identity = $this->hashService->validateAndStripHmac($source['__identity']);
 
                 return $this->createExtbaseFileReferenceFromFileReference(
@@ -100,7 +87,7 @@ class UploadedFileReferenceConverter extends AbstractTypeConverter {
      *
      * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference
      */
-    protected function createExtbaseFileReferenceFromFile(File $file, int $identity = NULL): ExtBaseFileReference {
+    protected function createExtbaseFileReferenceFromFile(File $file, int $identity = NULL): ExtbaseFileReference {
         $fileReference = $this->resourceFactory->createFileReferenceObject(
             [
                 'uid_local' => $file->getUid(),
@@ -119,11 +106,11 @@ class UploadedFileReferenceConverter extends AbstractTypeConverter {
      *
      * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference
      */
-    protected function createExtbaseFileReferenceFromFileReference(FileReference $fileReference, int $identity = NULL): ExtBaseFileReference {
+    protected function createExtbaseFileReferenceFromFileReference(FileReference $fileReference, int $identity = NULL): ExtbaseFileReference {
         if ($identity === NULL) {
-            $extbaseFileReference = new ExtBaseFileReference();
+            $extbaseFileReference = new ExtbaseFileReference();
         } else {
-            $extbaseFileReference = $this->persistenceManager->getObjectByIdentifier($identity, ExtBaseFileReference::class);
+            $extbaseFileReference = $this->persistenceManager->getObjectByIdentifier($identity, ExtbaseFileReference::class);
         }
 
         $extbaseFileReference->setOriginalResource($fileReference);
@@ -142,7 +129,7 @@ class UploadedFileReferenceConverter extends AbstractTypeConverter {
      * @throws \TYPO3\CMS\Extbase\Security\Exception\InvalidArgumentForHashGenerationException
      * @throws \TYPO3\CMS\Extbase\Security\Exception\InvalidHashException
      */
-    protected function createFileReferenceFromUploadedFile(array $file, PropertyMappingConfigurationInterface $configuration): ExtBaseFileReference {
+    protected function createFileReferenceFromUploadedFile(array $file, PropertyMappingConfigurationInterface $configuration): ExtbaseFileReference {
         if (!GeneralUtility::makeInstance(FileNameValidator::class)->isValid($file['name'])) {
             throw new InvalidFileExtensionException('extension', 1575438957);
         }
@@ -182,7 +169,7 @@ class UploadedFileReferenceConverter extends AbstractTypeConverter {
 
         return $this->createExtbaseFileReferenceFromFile(
             $uploadedFile,
-            $file['__identity'] ? $this->hashService->validateAndStripHmac($file['__identity']) : NULL
+            isset($file['__identity']) ? $this->hashService->validateAndStripHmac($file['__identity']) : NULL
         );
     }
 }

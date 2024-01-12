@@ -1,15 +1,16 @@
 <?php
 namespace Dagou\DagouExtbase\Validation\Validator;
 
-class EmailAddressValidator extends \TYPO3\CMS\Extbase\Validation\Validator\EmailAddressValidator {
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
+
+class EmailAddressValidator extends AbstractValidator {
     /**
-     * @param string $translateKey
-     * @param string $extensionName
-     * @param array $arguments
-     *
-     * @return string
+     * @param mixed $value
      */
-    protected function translateErrorMessage($translateKey, $extensionName, $arguments = []): string {
-        return 'emailAddress';
+    public function isValid(mixed $value): void {
+        if (!is_string($value) || !GeneralUtility::validEmail($value)) {
+            $this->addError('emailAddress', 1221559976);
+        }
     }
 }

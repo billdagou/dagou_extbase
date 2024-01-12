@@ -1,15 +1,15 @@
 <?php
 namespace Dagou\DagouExtbase\Validation\Validator;
 
-class AlphanumericValidator extends \TYPO3\CMS\Extbase\Validation\Validator\AlphanumericValidator {
+use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
+
+class AlphanumericValidator extends AbstractValidator {
     /**
-     * @param string $translateKey
-     * @param string $extensionName
-     * @param array $arguments
-     *
-     * @return string
+     * @param mixed $value
      */
-    protected function translateErrorMessage($translateKey, $extensionName, $arguments = []): string {
-        return 'alphanumeric';
+    public function isValid(mixed $value): void {
+        if (!is_string($value) || preg_match('/^[\pL\d]*$/u', $value) !== 1) {
+            $this->addError('alphanumeric', 1221551320);
+        }
     }
 }
