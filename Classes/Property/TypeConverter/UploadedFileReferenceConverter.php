@@ -20,11 +20,11 @@ use TYPO3\CMS\Extbase\Property\TypeConverter\AbstractTypeConverter;
 class UploadedFileReferenceConverter extends AbstractTypeConverter {
     use HashService, PersistenceManager, ResourceFactory;
 
-    const CONFIGURATION_ALLOWED_FILE_EXTENSIONS = 'extensions';
-    const CONFIGURATION_MAX_UPLOAD_FILE_SIZE = 'size';
-    const CONFIGURATION_RENAME = 'rename';
-    const CONFIGURATION_UPLOAD_CONFLICT_MODE = 'conflict';
-    const CONFIGURATION_UPLOAD_FOLDER = 'folder';
+    public const CONFIGURATION_ALLOWED_FILE_EXTENSIONS = 'extensions';
+    public const CONFIGURATION_MAX_UPLOAD_FILE_SIZE = 'size';
+    public const CONFIGURATION_RENAME = 'rename';
+    public const CONFIGURATION_UPLOAD_CONFLICT_MODE = 'conflict';
+    public const CONFIGURATION_UPLOAD_FOLDER = 'folder';
 
     protected array $fileReferences = [];
     protected string $defaultUploadFolder = '1:/user_upload/';
@@ -33,16 +33,30 @@ class UploadedFileReferenceConverter extends AbstractTypeConverter {
     /**
      * @param mixed $source
      * @param string $targetType
+     *
+     * @return bool
+     */
+    public function canConvertFrom($source, string $targetType): bool {
+        if (!is_subclass_of($targetType, ExtbaseFileReference::class)) {
+            return FALSE;
+        }
+
+        return TRUE;
+    }
+
+    /**
+     * @param mixed $source
+     * @param string $targetType
      * @param array $convertedChildProperties
      * @param \TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationInterface|null $configuration
      *
-     * @return mixed|\TYPO3\CMS\Extbase\Domain\Model\FileReference|\TYPO3\CMS\Extbase\Error\Error|null
+     * @return object|null
      * @throws \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException
      * @throws \TYPO3\CMS\Core\Resource\Exception\ResourceDoesNotExistException
      * @throws \TYPO3\CMS\Extbase\Security\Exception\InvalidArgumentForHashGenerationException
      * @throws \TYPO3\CMS\Extbase\Security\Exception\InvalidHashException
      */
-    public function convertFrom($source, string $targetType, array $convertedChildProperties = [], ?PropertyMappingConfigurationInterface $configuration = NULL) {
+    public function convertFrom($source, string $targetType, array $convertedChildProperties = [], ?PropertyMappingConfigurationInterface $configuration = NULL): ?object {
         if (!isset($source['error']) || $source['error'] === UPLOAD_ERR_NO_FILE) {
             if ($source['__resource'] ?? FALSE) {
                 $resource = $this->hashService->validateAndStripHmac($source['__resource']);
