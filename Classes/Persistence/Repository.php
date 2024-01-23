@@ -1,11 +1,8 @@
 <?php
 namespace Dagou\DagouExtbase\Persistence;
 
-use Dagou\DagouExtbase\DomainObject\AbstractCriteria;
-use TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface;
-use TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException;
-use TYPO3\CMS\Extbase\Persistence\QueryInterface;
-use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use Dagou\DagouExtbase\Persistence\Generic\Storage\Typo3DbQueryParser;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository {
     /**
@@ -55,52 +52,33 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository {
     }
 
     /**
-     * @param mixed $criteria
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
-     */
-    public function find(mixed $criteria = NULL): QueryResultInterface {
-        $query = $this->createCriteriaQuery($criteria);
-
-        return $query->execute();
-    }
-
-    /**
-     * @param mixed $criteria
-     *
-     * @return \TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
-     */
-    public function findOne(mixed $criteria = NULL): DomainObjectInterface {
-        $query = $this->createCriteriaQuery($criteria);
-
-        return $query->execute()->getFirst();
-    }
-
-    /**
-     * @param mixed $criteria
+     * @param string $fieldName
+     * @param array $criteria
      *
      * @return int
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \Doctrine\DBAL\Exception
      */
-    public function count(mixed $criteria = NULL): int {
-        $query = $this->createCriteriaQuery($criteria);
-
-        return $query->execute()->count();
-    }
-
-    /**
-     * @param mixed $criteria
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryInterface
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
-     */
-    protected function createCriteriaQuery(mixed $criteria = NULL): QueryInterface {
-        if ($criteria !== NULL && !is_array($criteria) && !$criteria instanceof AbstractCriteria) {
-            throw new IllegalObjectTypeException('The criteria given to createCriteriaQuery() must be NULL, array or of ' . AbstractCriteria::class . '.', 1588312025);
+    public function sumBy(string $fieldName, array $criteria): int {
+        $query = $this->createQuery();
+        $constraints = [];
+        foreach ($criteria as $propertyName => $propertyValue) {
+            $constraints[] = $query->equals($propertyName, $propertyValue);
         }
 
-        return $this->createQuery();
+        if (($numberOfConstraints = count($constraints)) === 1) {
+            $query->matching(...$constraints);
+        } elseif ($numberOfConstraints > 1) {
+            $query->matching($query->logicalAnd(...$constraints));
+        }
+
+        $queryBuilder = GeneralUtility::makeInstance(Typo3DbQueryParser::class)
+            ->convertQueryToDoctrineQueryBuilder($query);
+
+        $result = $queryBuilder->addSelectLiteral(
+                $queryBuilder->expr()->sum($fieldName, 'sum')
+            )
+            ->executeQuery();
+
+        return $result->fetchAssociative()['sum'] ?? 0;
     }
 }
