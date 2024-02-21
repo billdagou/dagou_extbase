@@ -36,23 +36,6 @@ class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
     }
 
     /**
-     * @param string $validatorClassName
-     * @param array $options
-     *
-     * @return \TYPO3\CMS\Extbase\Validation\Validator\ValidatorInterface
-     */
-    protected function getValidator(string $validatorClassName, array $options = []): ValidatorInterface {
-        /** @var ValidatorInterface $validator */
-        $validator = GeneralUtility::makeInstance($validatorClassName);
-
-        if (count($options) > 0) {
-            $validator->setOptions($options);
-        }
-
-        return $validator;
-    }
-
-    /**
      * @param string $argumentName
      * @param string $propertyName
      * @param array $overrideConfiguration
