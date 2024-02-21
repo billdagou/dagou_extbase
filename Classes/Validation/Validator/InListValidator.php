@@ -1,6 +1,7 @@
 <?php
 namespace Dagou\DagouExtbase\Validation\Validator;
 
+use TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
@@ -51,6 +52,16 @@ class InListValidator extends AbstractValidator{
 
             return FALSE;
         } else {
+            if ($value instanceof DomainObjectInterface) {
+                foreach ($this->options['list'] as $item) {
+                    if ($value->getUid() === $item->getUid()) {
+                        return TRUE;
+                    }
+                }
+
+                return FALSE;
+            }
+
             return in_array($value, $this->options['list'], $this->options['strict']);
         }
     }
