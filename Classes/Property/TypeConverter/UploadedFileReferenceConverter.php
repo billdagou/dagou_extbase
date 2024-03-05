@@ -57,13 +57,13 @@ class UploadedFileReferenceConverter extends AbstractTypeConverter {
      */
     public function convertFrom($source, string $targetType, array $convertedChildProperties = [], ?PropertyMappingConfigurationInterface $configuration = NULL) {
         if (!isset($source['error']) || $source['error'] === UPLOAD_ERR_NO_FILE) {
-            if ($source['__resource']) {
+            if ($source['__resource'] ?? FALSE) {
                 $resource = $this->hashService->validateAndStripHmac($source['__resource']);
 
                 return $this->createExtbaseFileReferenceFromFile(
                     $this->resourceFactory->getFileObject($resource)
                 );
-            } elseif ($source['__identity']) {
+            } elseif ($source['__identity'] ?? FALSE) {
                 $identity = $this->hashService->validateAndStripHmac($source['__identity']);
 
                 return $this->createExtbaseFileReferenceFromFileReference(
