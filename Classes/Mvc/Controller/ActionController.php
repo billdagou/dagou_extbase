@@ -42,11 +42,11 @@ class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      */
     protected function setTypeConverterConfigurationForFileUpload(string $argumentName, string $propertyName, array $overrideConfiguration = []) {
         $configuration = [
-            UploadedFileReferenceConverter::CONFIGURATION_ALLOWED_FILE_EXTENSIONS => $overrideConfiguration['ext'] ?: $this->settings[$propertyName]['ext'] ?: $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'],
-            UploadedFileReferenceConverter::CONFIGURATION_MAX_UPLOAD_FILE_SIZE => $overrideConfiguration['size'] ?: $this->settings[$propertyName]['size'] ?: NULL,
-            UploadedFileReferenceConverter::CONFIGURATION_RENAME => $overrideConfiguration['rename'] ?: NULL,
-            UploadedFileReferenceConverter::CONFIGURATION_UPLOAD_CONFLICT_MODE => $overrideConfiguration['conflict'] ?: $this->settings[$propertyName]['conflict'] ?: NULL,
-            UploadedFileReferenceConverter::CONFIGURATION_UPLOAD_FOLDER => $overrideConfiguration['folder'] ?: $this->settings[$propertyName]['folder'] ?: NULL,
+            UploadedFileReferenceConverter::CONFIGURATION_ALLOWED_FILE_EXTENSIONS => $overrideConfiguration['ext'] ?? $this->settings[$propertyName]['ext'] ?? $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'],
+            UploadedFileReferenceConverter::CONFIGURATION_MAX_UPLOAD_FILE_SIZE => $overrideConfiguration['size'] ?? $this->settings[$propertyName]['size'] ?? NULL,
+            UploadedFileReferenceConverter::CONFIGURATION_RENAME => $overrideConfiguration['rename'] ?? NULL,
+            UploadedFileReferenceConverter::CONFIGURATION_UPLOAD_CONFLICT_MODE => $overrideConfiguration['conflict'] ?? $this->settings[$propertyName]['conflict'] ?? NULL,
+            UploadedFileReferenceConverter::CONFIGURATION_UPLOAD_FOLDER => $overrideConfiguration['folder'] ?? $this->settings[$propertyName]['folder'] ?? NULL,
         ];
 
         $this->arguments->getArgument($argumentName)
