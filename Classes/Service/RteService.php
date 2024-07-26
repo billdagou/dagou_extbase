@@ -14,14 +14,14 @@ class RteService implements SingletonInterface {
     /**
      * @param \TYPO3\CMS\Core\Html\RteHtmlParser $rteHtmlParser
      */
-    public function injectRteHtmlParser(RteHtmlParser $rteHtmlParser) {
+    public function injectRteHtmlParser(RteHtmlParser $rteHtmlParser): void {
         $this->rteHtmlParser = $rteHtmlParser;
     }
 
     /**
      * @param \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface $configurationManager
      */
-    public function injectConfigurationManager(ConfigurationManagerInterface $configurationManager) {
+    public function injectConfigurationManager(ConfigurationManagerInterface $configurationManager): void {
         $this->configurationManager = $configurationManager;
     }
 

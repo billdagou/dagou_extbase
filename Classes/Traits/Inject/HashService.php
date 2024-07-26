@@ -7,7 +7,7 @@ trait HashService {
     /**
      * @param \TYPO3\CMS\Extbase\Security\Cryptography\HashService $hashService
      */
-    public function injectHashService(\TYPO3\CMS\Extbase\Security\Cryptography\HashService $hashService) {
+    public function injectHashService(\TYPO3\CMS\Extbase\Security\Cryptography\HashService $hashService): void {
         $this->hashService = $hashService;
     }
 }

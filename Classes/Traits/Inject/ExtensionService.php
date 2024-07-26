@@ -7,7 +7,7 @@ trait ExtensionService {
     /**
      * @param \TYPO3\CMS\Extbase\Service\ExtensionService $extensionService
      */
-    public function injectExtensionService(\TYPO3\CMS\Extbase\Service\ExtensionService $extensionService) {
+    public function injectExtensionService(\TYPO3\CMS\Extbase\Service\ExtensionService $extensionService): void {
         $this->extensionService = $extensionService;
     }
 }

@@ -10,7 +10,7 @@ trait Settings {
     /**
      * @param \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface $configurationManager
      */
-    public function injectConfigurationManager(ConfigurationManagerInterface $configurationManager) {
+    public function injectConfigurationManager(ConfigurationManagerInterface $configurationManager): void {
         $this->configurationManager = $configurationManager;
 
         $this->settings = $configurationManager->getConfiguration(

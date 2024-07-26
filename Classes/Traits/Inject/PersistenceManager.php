@@ -9,7 +9,7 @@ trait PersistenceManager {
     /**
      * @param \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface $persistenceManager
      */
-    public function injectPersistenceManager(PersistenceManagerInterface $persistenceManager) {
+    public function injectPersistenceManager(PersistenceManagerInterface $persistenceManager): void {
         $this->persistenceManager = $persistenceManager;
     }
 }

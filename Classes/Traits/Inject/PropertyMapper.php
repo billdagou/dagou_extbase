@@ -7,7 +7,7 @@ trait PropertyMapper {
     /**
      * @param \TYPO3\CMS\Extbase\Property\PropertyMapper $propertyMapper
      */
-    public function injectPropertyMapper(\TYPO3\CMS\Extbase\Property\PropertyMapper $propertyMapper) {
+    public function injectPropertyMapper(\TYPO3\CMS\Extbase\Property\PropertyMapper $propertyMapper): void {
         $this->propertyMapper = $propertyMapper;
     }
 }

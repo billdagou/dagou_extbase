@@ -9,7 +9,7 @@ trait EventDispatcher {
     /**
      * @param \Psr\EventDispatcher\EventDispatcherInterface $eventDispatcher
      */
-    public function injectEventDispatcher(EventDispatcherInterface $eventDispatcher) {
+    public function injectEventDispatcher(EventDispatcherInterface $eventDispatcher): void {
         $this->eventDispatcher = $eventDispatcher;
     }
 }

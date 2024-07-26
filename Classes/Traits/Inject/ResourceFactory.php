@@ -7,7 +7,7 @@ trait ResourceFactory {
     /**
      * @param \TYPO3\CMS\Core\Resource\ResourceFactory $resourceFactory
      */
-    public function injectResourceFactory(\TYPO3\CMS\Core\Resource\ResourceFactory $resourceFactory) {
+    public function injectResourceFactory(\TYPO3\CMS\Core\Resource\ResourceFactory $resourceFactory): void {
         $this->resourceFactory = $resourceFactory;
     }
 }

@@ -13,7 +13,7 @@ class Typo3DbQueryParser extends \TYPO3\CMS\Extbase\Persistence\Generic\Storage\
      *
      * @throws \TYPO3\CMS\Extbase\Persistence\Generic\Exception
      */
-    protected function initializeQueryBuilder(SourceInterface $source) {
+    protected function initializeQueryBuilder(SourceInterface $source): void {
         if ($source instanceof SelectorInterface) {
             $className = $source->getNodeTypeName();
             $tableName = $this->dataMapper->getDataMap($className)->getTableName();
