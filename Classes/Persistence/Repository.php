@@ -58,7 +58,7 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository {
      * @return int
      * @throws \Doctrine\DBAL\Exception
      */
-    public function sumBy(string $fieldName, array $criteria): int {
+    public function sum(string $fieldName, array $criteria): int {
         $query = $this->createQuery();
         $constraints = [];
         foreach ($criteria as $propertyName => $propertyValue) {
