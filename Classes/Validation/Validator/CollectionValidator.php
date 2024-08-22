@@ -62,4 +62,14 @@ class CollectionValidator extends AbstractGenericObjectValidator {
             $i++;
         }
     }
+
+    /**
+     * @param string $propertyName
+     * @param \TYPO3\CMS\Extbase\Validation\Validator\ValidatorInterface $validator
+     *
+     * @return void
+     */
+    public function addPropertyValidator(string $propertyName, ValidatorInterface $validator): void {
+        $this->propertyValidators[$propertyName] = $validator;
+    }
 }
