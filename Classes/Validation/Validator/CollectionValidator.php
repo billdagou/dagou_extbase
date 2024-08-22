@@ -55,7 +55,7 @@ class CollectionValidator extends AbstractGenericObjectValidator {
         $i = 0;
 
         foreach ($object as $collectionElement) {
-            if (($validator = $this->propertyValidators[$i] ?? $this->options['default'])) {
+            if (($validator = $this->propertyValidators[$i] ?? $this->options['default'] ?? NULL)) {
                 $this->result->forProperty((string)$i)->merge($validator->validate($collectionElement));
             }
 
