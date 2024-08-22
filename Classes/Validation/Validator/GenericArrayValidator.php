@@ -12,9 +12,11 @@ class GenericArrayValidator extends AbstractGenericObjectValidator {
      */
     public function validate(mixed $value): Result {
         if (!is_array($value)) {
+            $this->result = new Result();
+
             $this->addError('Array expected, %1$s given.', 1577978601, [gettype($value)]);
 
-            return new Result();
+            return $this->result;
         } else {
             return parent::validate(
                 json_decode(
