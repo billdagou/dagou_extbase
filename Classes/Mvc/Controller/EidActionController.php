@@ -4,6 +4,7 @@ namespace Dagou\DagouExtbase\Mvc\Controller;
 use Dagou\DagouExtbase\Mvc\EidRequest;
 use Dagou\DagouExtbase\Mvc\EidRequestInterface;
 use Dagou\DagouExtbase\Mvc\Web\EidRequestBuilder;
+use Dagou\DagouExtbase\Mvc\Web\Routing\EidUriBuilder;
 use Dagou\DagouExtbase\Traits\Inject\EventDispatcher;
 use Dagou\DagouExtbase\Traits\Inject\PropertyMapper;
 use Dagou\DagouExtbase\Traits\Inject\ReflectionService;
@@ -24,6 +25,7 @@ use TYPO3\CMS\Extbase\Validation\Validator\ConjunctionValidator;
 abstract class EidActionController implements EidControllerInterface {
     use EventDispatcher, PropertyMapper, ReflectionService, ValidatorResolver;
 
+    protected ?EidUriBuilder $uriBuilder = NULL;
     protected string $actionMethodName = '';
     protected string $errorMethodName = 'errorAction';
     protected ?EidRequest $request = NULL;
@@ -124,6 +126,8 @@ abstract class EidActionController implements EidControllerInterface {
 
         $this->arguments = GeneralUtility::makeInstance(Arguments::class);
         $this->request = $request;
+        $this->uriBuilder = GeneralUtility::makeInstance(EidUriBuilder::class)
+            ->setRequest($request);
         $this->actionMethodName = $this->resolveActionMethodName();
 
         $this->initializeActionMethodArguments();
