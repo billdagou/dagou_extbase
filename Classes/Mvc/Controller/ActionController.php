@@ -7,7 +7,7 @@ use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
+abstract class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
     use ExtensionService;
 
     /**
