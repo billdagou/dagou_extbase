@@ -5,10 +5,10 @@ use Dagou\DagouExtbase\Mvc\EidRequest;
 use Dagou\DagouExtbase\Mvc\EidRequestInterface;
 use Dagou\DagouExtbase\Mvc\Web\EidRequestBuilder;
 use Dagou\DagouExtbase\Mvc\Web\Routing\EidUriBuilder;
-use Dagou\DagouExtbase\Traits\Inject\EventDispatcher;
-use Dagou\DagouExtbase\Traits\Inject\PropertyMapper;
-use Dagou\DagouExtbase\Traits\Inject\ReflectionService;
-use Dagou\DagouExtbase\Traits\Inject\ValidatorResolver;
+use Dagou\DagouExtbase\Traits\Inject\EventDispatcherTrait;
+use Dagou\DagouExtbase\Traits\Inject\PropertyMapperTrait;
+use Dagou\DagouExtbase\Traits\Inject\ReflectionServiceTrait;
+use Dagou\DagouExtbase\Traits\Inject\ValidatorResolverTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Http\HtmlResponse;
@@ -23,7 +23,7 @@ use TYPO3\CMS\Extbase\Property\Exception\TargetNotFoundException;
 use TYPO3\CMS\Extbase\Validation\Validator\ConjunctionValidator;
 
 abstract class EidActionController implements EidControllerInterface {
-    use EventDispatcher, PropertyMapper, ReflectionService, ValidatorResolver;
+    use EventDispatcherTrait, PropertyMapperTrait, ReflectionServiceTrait, ValidatorResolverTrait;
 
     protected ?EidUriBuilder $uriBuilder = NULL;
     protected string $actionMethodName = '';

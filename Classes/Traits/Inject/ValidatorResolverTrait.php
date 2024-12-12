@@ -1,15 +1,17 @@
 <?php
 namespace Dagou\DagouExtbase\Traits\Inject;
 
-trait ValidatorResolver {
-    protected \TYPO3\CMS\Extbase\Validation\ValidatorResolver $validatorResolver;
+use TYPO3\CMS\Extbase\Validation\ValidatorResolver;
+
+trait ValidatorResolverTrait {
+    protected ValidatorResolver $validatorResolver;
 
     /**
      * @param \TYPO3\CMS\Extbase\Validation\ValidatorResolver $validatorResolver
      *
      * @return void
      */
-    public function injectValidatorResolver(\TYPO3\CMS\Extbase\Validation\ValidatorResolver $validatorResolver): void {
+    public function injectValidatorResolver(ValidatorResolver $validatorResolver): void {
         $this->validatorResolver = $validatorResolver;
     }
 }

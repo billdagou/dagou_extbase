@@ -7,10 +7,6 @@ services:
     Dagou\DagouExtbase\:
         resource: '../Classes/*'
 
-    Dagou\DagouExtbase\Persistence\Generic\Storage\Typo3DbQueryParser:
-        public: true
-        shared: false
-
     Dagou\DagouExtbase\Property\TypeConverter\UploadedFileReferenceConverter:
         tags:
             - name: extbase.type_converter

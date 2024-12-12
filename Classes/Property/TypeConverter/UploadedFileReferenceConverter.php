@@ -3,9 +3,9 @@ namespace Dagou\DagouExtbase\Property\TypeConverter;
 
 use Dagou\DagouExtbase\Property\Exception\FileSizeTooLargeException;
 use Dagou\DagouExtbase\Property\Exception\InvalidFileExtensionException;
-use Dagou\DagouExtbase\Traits\Inject\HashService;
-use Dagou\DagouExtbase\Traits\Inject\PersistenceManager;
-use Dagou\DagouExtbase\Traits\Inject\ResourceFactory;
+use Dagou\DagouExtbase\Traits\Inject\HashServiceTrait;
+use Dagou\DagouExtbase\Traits\Inject\PersistenceManagerTrait;
+use Dagou\DagouExtbase\Traits\Inject\ResourceFactoryTrait;
 use TYPO3\CMS\Core\Resource\DuplicationBehavior;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\FileReference;
@@ -18,7 +18,7 @@ use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationInterface;
 use TYPO3\CMS\Extbase\Property\TypeConverter\AbstractTypeConverter;
 
 class UploadedFileReferenceConverter extends AbstractTypeConverter {
-    use HashService, PersistenceManager, ResourceFactory;
+    use HashServiceTrait, PersistenceManagerTrait, ResourceFactoryTrait;
 
     public const CONFIGURATION_ALLOWED_FILE_EXTENSIONS = 'extensions';
     public const CONFIGURATION_MAX_UPLOAD_FILE_SIZE = 'size';

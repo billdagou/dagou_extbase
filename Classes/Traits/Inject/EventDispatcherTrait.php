@@ -3,7 +3,7 @@ namespace Dagou\DagouExtbase\Traits\Inject;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 
-trait EventDispatcher {
+trait EventDispatcherTrait {
     protected EventDispatcherInterface $eventDispatcher;
 
     /**

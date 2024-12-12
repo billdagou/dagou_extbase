@@ -3,7 +3,7 @@ namespace Dagou\DagouExtbase\Traits\Inject;
 
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 
-trait PersistenceManager {
+trait PersistenceManagerTrait {
     protected PersistenceManagerInterface $persistenceManager;
 
     /**

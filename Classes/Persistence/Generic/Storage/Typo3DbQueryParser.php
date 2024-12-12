@@ -1,12 +1,14 @@
 <?php
 namespace Dagou\DagouExtbase\Persistence\Generic\Storage;
 
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\JoinInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\SelectorInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\SourceInterface;
 
+#[Autoconfigure(public: TRUE, shared: FALSE)]
 class Typo3DbQueryParser extends \TYPO3\CMS\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser {
     /**
      * @param \TYPO3\CMS\Extbase\Persistence\Generic\Qom\SourceInterface $source

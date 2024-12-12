@@ -2,7 +2,7 @@
 namespace Dagou\DagouExtbase\Mvc\Web\Routing;
 
 use Dagou\DagouExtbase\Mvc\EidRequestInterface;
-use Dagou\DagouExtbase\Traits\Inject\ExtensionService;
+use Dagou\DagouExtbase\Traits\Inject\ExtensionServiceTrait;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
@@ -16,7 +16,7 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 #[Autoconfigure(public: TRUE, shared: FALSE)]
 class EidUriBuilder {
-    use ExtensionService;
+    use ExtensionServiceTrait;
 
     protected ?EidRequestInterface $request = NULL;
 

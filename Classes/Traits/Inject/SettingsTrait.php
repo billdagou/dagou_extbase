@@ -3,7 +3,7 @@ namespace Dagou\DagouExtbase\Traits\Inject;
 
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
-trait Settings {
+trait SettingsTrait {
     protected ConfigurationManagerInterface $configurationManager;
     protected array $settings = [];
 
